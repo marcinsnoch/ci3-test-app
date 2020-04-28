@@ -1,0 +1,81 @@
+<?php
+
+$config = [
+    'sign_in' => [
+        ['field' => 'user_email', 'label' => 'lang:Email', 'rules' => 'required|trim|valid_email'],
+        ['field' => 'user_password', 'label' => 'lang:Password', 'rules' => 'trim|required'],
+    ],
+    'reset_password' => [
+        ['field' => 'user_password', 'label' => 'lang:Password', 'rules' => 'required|trim|min_length[8]'],
+        ['field' => 'user_passconf', 'label' => 'lang:Passconf', 'rules' => 'required|trim|matches[user_password]'],
+    ],
+    'create_user' => [
+        ['field' => 'type_of_account', 'label' => 'lang:Type_of_account', 'rules' => 'required'],
+        ['field' => 'user_fname', 'label' => 'lang:First_name', 'rules' => 'required|trim'],
+        ['field' => 'user_lname', 'label' => 'lang:Last_name', 'rules' => 'required|trim'],
+        ['field' => 'user_email', 'label' => 'Email', 'rules' => 'required|trim|valid_email|callback__check_email'],
+        ['field' => 'user_password', 'label' => 'lang:Password', 'rules' => 'trim|required|min_length[8]'],
+        ['field' => 'user_passconf', 'label' => 'lang:Passconf', 'rules' => 'trim|required|matches[user_password]'],
+        ['field' => 'user_company', 'label' => 'lang:Company', 'rules' => 'required|trim'],
+        ['field' => 'user_job', 'label' => 'lang:Job', 'rules' => 'required|trim'],
+        ['field' => 'user_phone', 'label' => 'lang:Phone', 'rules' => 'required|trim'],
+    ],
+    'update_user' => [
+        ['field' => 'user_fname', 'label' => 'lang:First_name', 'rules' => 'required|trim'],
+        ['field' => 'user_lname', 'label' => 'lang:Last_name', 'rules' => 'required|trim'],
+        ['field' => 'user_password', 'label' => 'lang:Password', 'rules' => 'trim|min_length[8]|matches[user_passconf]'],
+        ['field' => 'user_passconf', 'label' => 'lang:Passconf', 'rules' => 'trim|matches[user_password]'],
+        ['field' => 'user_company', 'label' => 'lang:Company', 'rules' => 'required|trim'],
+        ['field' => 'user_job', 'label' => 'lang:Job', 'rules' => 'required|trim'],
+        ['field' => 'user_phone', 'label' => 'lang:Phone', 'rules' => 'required|trim'],
+        ['field' => 'user_language', 'label' => 'lang:Language', 'rules' => 'required|trim'],
+    ],
+    'add_product' => [
+        ['field' => 'created_at', 'label' => 'lang:Date', 'rules' => 'required|trim'],
+        ['field' => 'stock_id', 'label' => 'lang:Stock', 'rules' => 'required|trim'],
+        ['field' => 'year_code', 'label' => 'lang:Year', 'rules' => 'required|trim'],
+        ['field' => 'product_no', 'label' => 'lang:Product_no', 'rules' => 'required|regex_match[/[A-Z]{2}\d{2}[A-Z]\d{3}/]|exact_length[8]|trim|callback__product_check'], //[A-Z]{2}\d{2}[A-Z]\d{3}
+        ['field' => 'product_qty', 'label' => 'lang:Quantity', 'rules' => 'required|trim|numeric'],
+        ['field' => 'product_name', 'label' => 'lang:Product_name', 'rules' => 'required|trim'],
+        ['field' => 'product_type', 'label' => 'lang:Type', 'rules' => 'required|trim'],
+        ['field' => 'product_size', 'label' => 'lang:Size', 'rules' => 'trim'],
+        ['field' => 'product_weight', 'label' => 'lang:Weight', 'rules' => 'trim'],
+        ['field' => 'product_picture', 'label' => 'lang:Picture', 'rules' => 'valid_url|trim'],
+    ],
+    'update_product' => [
+        ['field' => 'created_at', 'label' => 'lang:Date', 'rules' => 'trim'],
+        ['field' => 'stock_id', 'label' => 'lang:Stock', 'rules' => 'trim'],
+        ['field' => 'year_code', 'label' => 'lang:Year', 'rules' => 'trim'],
+        ['field' => 'product_qty', 'label' => 'lang:Quantity', 'rules' => 'required|trim|numeric'],
+        ['field' => 'product_name', 'label' => 'lang:Product_name', 'rules' => 'required|trim'],
+        ['field' => 'product_type', 'label' => 'lang:Type', 'rules' => 'required|trim'],
+        ['field' => 'product_size', 'label' => 'lang:Size', 'rules' => 'trim'],
+        ['field' => 'product_weight', 'label' => 'lang:Weight', 'rules' => 'trim'],
+        ['field' => 'product_picture', 'label' => 'lang:Picture', 'rules' => 'valid_url|trim'],
+    ],
+    'add_delivery' => [
+        ['field' => 'created_at', 'label' => 'lang:Date', 'rules' => 'required|trim'],
+        ['field' => 'product_no', 'label' => 'lang:Product_no', 'rules' => 'required|trim|callback__product_exist'],
+        ['field' => 'delivered_qty', 'label' => 'lang:Quantity', 'rules' => 'required|trim|numeric'],
+        ['field' => 'delivery_comment', 'label' => 'lang:Note', 'rules' => 'trim'],
+    ],
+    'edit_delivery' => [
+        ['field' => 'created_at', 'label' => 'lang:Date', 'rules' => 'required|trim'],
+        ['field' => 'delivered_qty', 'label' => 'lang:Quantity', 'rules' => 'required|trim|numeric'],
+        ['field' => 'delivery_comment', 'label' => 'lang:Note', 'rules' => 'trim'],
+    ],
+    'delivery_address' => [
+        ['field' => 'primary_address', 'label' => 'lang:Delivery_address', 'rules' => 'required'],
+        ['field' => 'company', 'label' => 'lang:Company', 'rules' => 'required|trim'],
+        ['field' => 'address', 'label' => 'lang:Address', 'rules' => 'required|trim'],
+        ['field' => 'post_code', 'label' => 'lang:Post_code', 'rules' => 'required|trim'],
+        ['field' => 'city', 'label' => 'lang:City', 'rules' => 'required|trim'],
+        ['field' => 'country', 'label' => 'lang:Country', 'rules' => 'required|trim'],
+        ['field' => 'contact_name', 'label' => 'lang:Contact_name', 'rules' => 'required|trim'],
+        ['field' => 'phone', 'label' => 'lang:Phone', 'rules' => 'required|trim'],
+        ['field' => 'additional_info', 'label' => 'lang:Additional_info', 'rules' => 'trim'],
+    ],
+    'bm_delivery_address' => [
+        ['field' => 'primary_address', 'label' => 'lang:Delivery_address', 'rules' => 'required'],
+    ],
+];
