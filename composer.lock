@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a8ca9188546e30db9bf4b161ad48b8de",
+    "content-hash": "934c4de9e5ef043fa2f803c6e31b6eb6",
     "packages": [
         {
             "name": "symfony/intl",

@@ -3,7 +3,7 @@
         "vendor-dir": "application/vendor"
     },
     "require": {
-        "twig/twig": "^2.0",
-        "twig/intl-extra": "^2.0"
+        "twig/twig": "^2.12.5",
+        "twig/intl-extra": "^2.12.5"
     }
 }
