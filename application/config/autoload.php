@@ -63,6 +63,7 @@ $autoload['libraries'] = [
     'cart',
     'database',
     'form_validation',
+    'twig',
     'session',
 ];
 

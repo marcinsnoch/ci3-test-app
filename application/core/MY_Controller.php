@@ -10,34 +10,6 @@
  */
 class MY_Controller extends CI_Controller
 {
-    /* --------------------------------------------------------------
-     * VARIABLES
-     * ------------------------------------------------------------ */
-
-    public $user;
-
-    /**
-     * The current request's view. Automatically guessed
-     * from the name of the controller and action.
-     */
-    protected $view = '';
-
-    /**
-     * An array of variables to be passed through to the
-     * view, layout and any asides.
-     */
-    protected $data = [];
-
-    /**
-     * The name of the layout to wrap around the view.
-     */
-    protected $layout;
-
-    /**
-     * An arbitrary list of asides/partials to be loaded into
-     * the layout. The key is the declared name, the value the file.
-     */
-    protected $asides = [];
 
     /**
      * A list of models to be autoloaded.
@@ -54,10 +26,12 @@ class MY_Controller extends CI_Controller
      * A list of helpers to be autoloaded.
      */
     protected $helpers = [];
+    
+    /**
+     * A list of Twig globals.
+     */
+    protected $twig_globals = [];
 
-    /* --------------------------------------------------------------
-     * GENERIC METHODS
-     * ------------------------------------------------------------ */
 
     /**
      * Initialise the controller, tie into the CodeIgniter superobject
@@ -68,88 +42,10 @@ class MY_Controller extends CI_Controller
         parent::__construct();
         $this->load->language('application');
 
+        $this->_load_twig_globals();
         $this->_load_models();
         $this->_load_helpers();
     }
-
-    /* --------------------------------------------------------------
-     * VIEW RENDERING
-     * ------------------------------------------------------------ */
-
-    /**
-     * Override CodeIgniter's despatch mechanism and route the request
-     * through to the appropriate action. Support custom 404 methods and
-     * autoload the view into the layout.
-     */
-    public function _remap($method)
-    {
-        if (method_exists($this, $method)) {
-            call_user_func_array([$this, $method], array_slice($this->uri->rsegments, 2));
-        } else {
-            if (method_exists($this, '_404')) {
-                call_user_func_array([$this, '_404'], [$method]);
-            } else {
-                show_404(strtolower(get_class($this)) . '/' . $method);
-            }
-        }
-
-        $this->_load_view();
-    }
-
-    /**
-     * Automatically load the view, allowing the developer to override if
-     * he or she wishes, otherwise being conventional.
-     */
-    protected function _load_view()
-    {
-        // If $this->view == FALSE, we don't want to load anything
-        if ($this->view !== false) {
-            // If $this->view isn't empty, load it. If it isn't, try and guess based on the controller and action name
-            $view = (!empty($this->view)) ? $this->view : $this->router->directory . $this->router->class . '/' . $this->router->method;
-
-            // Load the view into $yield
-            $data['yield'] = $this->load->view($view, $this->data, true);
-
-            // Do we have any asides? Load them.
-            if (!empty($this->asides)) {
-                foreach ($this->asides as $name => $file) {
-                    $data['yield_' . $name] = $this->load->view($file, $this->data, true);
-                }
-            }
-
-            // Load in our existing data with the asides and view
-            $data = array_merge($this->data, $data);
-            $layout = false;
-
-            // If we didn't specify the layout, try to guess it
-            if (!isset($this->layout)) {
-                if (file_exists(APPPATH . 'views/layouts/' . $this->router->class . '.php')) {
-                    $layout = 'layouts/' . $this->router->class;
-                } else {
-                    $layout = 'layouts/application';
-                }
-            }
-
-            // If we did, use it
-            elseif ($this->layout !== false) {
-                $layout = $this->layout;
-            }
-
-            // If $layout is FALSE, we're not interested in loading a layout, so output the view directly
-            if ($layout == false) {
-                $this->output->set_output($data['yield']);
-            }
-
-            // Otherwise? Load away :)
-            else {
-                $this->load->view($layout, $data);
-            }
-        }
-    }
-
-    /* --------------------------------------------------------------
-     * MODEL LOADING
-     * ------------------------------------------------------------ */
 
     /**
      * Load models based on the $this->models array.
@@ -170,10 +66,6 @@ class MY_Controller extends CI_Controller
         return str_replace('%', $model, $this->model_string);
     }
 
-    /* --------------------------------------------------------------
-     * HELPER LOADING
-     * ------------------------------------------------------------ */
-
     /**
      * Load helpers based on the $this->helpers array.
      */
@@ -181,6 +73,16 @@ class MY_Controller extends CI_Controller
     {
         foreach ($this->helpers as $helper) {
             $this->load->helper($helper);
+        }
+    }
+    
+    /**
+     * Load Twig globals
+     */
+    private function _load_twig_globals()
+    {
+        foreach ($this->twig_globals as $global) {
+            $this->twig->addGlobal($global, $this->{$global});
         }
     }
 }

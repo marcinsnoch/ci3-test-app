@@ -1,4 +1,4 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-$config['app_name'] = 'Test app';
+$config['app_name'] = 'MyAPP';

@@ -14,16 +14,10 @@ class Home extends MY_Controller
 
     public function index()
     {
-        $this->data['title'] = 'Tytuł w zmiennej';
-    }
-
-    public function twig()
-    {
-        $this->view = false;
-        $this->load->library('twig');
-        $this->twig->display('home/index');
+        $title = 'Article';
+        $this->twig->display('home/index', compact('title'));
     }
 }
 
-/* End of file Dashboard.php */
-/* Location: ./application/controllers/Dashboard.php */
+/* End of file Home.php */
+/* Location: ./application/controllers/Home.php */
