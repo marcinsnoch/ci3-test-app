@@ -41,6 +41,17 @@
     <script src="{{ base_url('plugins/tableexport.jquery.plugin/tableExport.min.js') }}"></script>
     <script src="{{ base_url('plugins/icheck/icheck.min.js') }}"></script>
     <script src="{{ base_url('js/application.min.js') }}"></script>
+    {% set alert = session.flashdata('alert') %}
+    {% if alert %}
+    <script>
+        $.notify({
+            message: '{{ alert.msg }}'
+        },{
+            type: '{{ alert.type }}',
+            placement: {align: 'center'}
+        });
+    </script>
+    {% endif %}
     {% endblock %}
 </body>
 

@@ -26,7 +26,7 @@ class MY_Controller extends CI_Controller
      * A list of helpers to be autoloaded.
      */
     protected $helpers = [];
-    
+
     /**
      * A list of Twig globals.
      */
@@ -75,14 +75,29 @@ class MY_Controller extends CI_Controller
             $this->load->helper($helper);
         }
     }
-    
+
     /**
      * Load Twig globals
      */
     private function _load_twig_globals()
     {
-        foreach ($this->twig_globals as $global) {
-            $this->twig->addGlobal($global, $this->{$global});
+        foreach ($this->twig_globals as $key => $val) {
+            if (is_int($key)) {
+                $this->twig->addGlobal($val, $this->{$val});
+            } else {
+                $this->twig->addGlobal($key, $val);
+            }
+        }
+    }
+
+    /**
+     * Redirect to login page
+     * if not logged in
+     */
+    public function logged_in()
+    {
+        if ((bool) !$this->session->userdata('logged_in')) {
+            redirect('login');
         }
     }
 }

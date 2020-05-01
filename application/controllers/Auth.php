@@ -4,12 +4,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Auth extends MY_Controller
 {
+    protected $helpers = [
+        'application'
+    ];
+
     protected $models = [
-        'user'
+        'auth',
     ];
 
     protected $twig_globals = [
-        'config'
+        'config',
+        'session',
     ];
 
     public function __construct()
@@ -22,15 +27,24 @@ class Auth extends MY_Controller
      */
     public function activation()
     {
+        if (!$this->input->get('token')) {
+            show_404();
+        }
         // check token in link
-        //     correct
-        //         active account
-        //         email to user
-        //         set msg. "wait for admin"
-        //         redirect to login
-        //     incorrect
-        //         set msg. "error"
-        //         redirect to login
+        $user = $this->auth->get_by('token', $this->input->get('token'));
+        if (!$user) {
+            // set flash msg. "error"
+            set_alert('danger', 'Some error occurred!');
+        } else {
+            // active account
+            $this->auth->update($user->id, ['token' => null]);
+            set_alert('success', 'Success!');
+            // email to user
+            $this->load->library('Sendmail');
+            $this->sendmail->confirmEmail((array) $user);
+        }
+        // redirect to login
+        redirect('login');
     }
 
     /**
@@ -38,6 +52,19 @@ class Auth extends MY_Controller
      */
     public function login()
     {
+        $this->_redirect_if_logged_in();
+        if ($this->input->post('login') && $this->form_validation->run('login')) {
+            $user = $this->auth->get_by('email', $this->input->post('email'));
+            if ($user->token !== null) {
+                // alert: account not active
+                set_alert('danger', 'Your account is not activated. Please check your email.');
+            }
+            // compare input pass with stored user password
+            if (password_verify($this->input->post('password'), $user->password)) {
+                $this->auth->login($user);
+                redirect('home');
+            }
+        }
         // correct
         //     set session
         //     update last login timestamp
@@ -59,7 +86,9 @@ class Auth extends MY_Controller
     public function logout()
     {
         // session destroy
-	    // redirect to login page
+        session_destroy();
+        // redirect to login page
+        redirect('login');
     }
 
     /**
@@ -70,23 +99,38 @@ class Auth extends MY_Controller
         // display forgot password form
         // get user email and check if exist
         // exist
-            // send email: link with token
+        // send email: link with token
         // not exist
-            // display message
+        // display message
         $this->twig->display('auth/password');
     }
 
+    /**
+     * Register new user
+     */
     public function register()
     {
-        // display register form
         // validate the data
-        // create account
-        // generate and store token
-        // send email: link with activation token
-        // display msg. "check your email"
+        if ($this->input->post('register') && $this->form_validation->run('register_user')) {
+            // create account
+            $user_id = $this->auth->create_user(array_from_post(['full_name', 'email', 'password']));
+            if ($user_id) {
+                // send activation email (link with token)
+                $this->load->library('Sendmail');
+                $user = $this->auth->get($user_id);
+                $this->sendmail->activationEmail((array) $user);
+                //TODO: set flash msg. "check your email..."
+                // redirect to login page
+                redirect('login');
+            }
+        }
+        // display register form
         $this->twig->display('auth/register');
     }
 
+    /**
+     * Reset forgot password
+     */
     public function reset()
     {
         // check token in link
@@ -95,10 +139,33 @@ class Auth extends MY_Controller
         // correct
             // new password form
             // update password
-		    // display message
-		    // email with info
+            // display message
+            // email with info
+    }
+
+    // Private methods
+
+    public function _redirect_if_logged_in()
+    {
+        if ((bool) $this->session->userdata('logged_in')) {
+            echo 'tu';
+            redirect('home');
+        }
+    }
+
+    /**
+     * Check if email has been already used
+     */
+    public function _email_exist($email)
+    {
+        if ($this->auth->count_by('email', $email)) {
+            $this->form_validation->set_message('_email_exist', 'This email address is already registered');
+            return false;
+        }
+
+        return true;
     }
 }
 
-/* End of file Dashboard.php */
-/* Location: ./application/controllers/Dashboard.php */
+// End of file Dashboard.php
+// Location: ./application/controllers/Dashboard.php

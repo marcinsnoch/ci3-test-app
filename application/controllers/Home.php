@@ -10,12 +10,18 @@ class Home extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->logged_in();
     }
 
     public function index()
     {
         $title = 'Article';
         $this->twig->display('home/index', compact('title'));
+    }
+
+    public function dwa()
+    {
+        echo 'Dwa';
     }
 }
 
