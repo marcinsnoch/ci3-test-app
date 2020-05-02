@@ -38,7 +38,7 @@ class Auth extends MY_Controller
         } else {
             // active account
             $this->auth->update($user->id, ['token' => null]);
-            set_alert('success', 'Success!');
+            set_alert('success', 'Account activated successfully!');
             // email to user
             $this->load->library('Sendmail');
             $this->sendmail->confirmEmail((array) $user);
@@ -52,12 +52,20 @@ class Auth extends MY_Controller
      */
     public function login()
     {
-        $this->_redirect_if_logged_in();
+        // check if logged in
+        $this->_logged_in();
         if ($this->input->post('login') && $this->form_validation->run('login')) {
             $user = $this->auth->get_by('email', $this->input->post('email'));
+            // check if user exist
+            if (!$user) {
+                set_alert('danger', 'User does not exist!');
+                redirect('login');
+            }
+            // check if account is activated
             if ($user->token !== null) {
                 // alert: account not active
                 set_alert('danger', 'Your account is not activated. Please check your email.');
+                redirect('login');
             }
             // compare input pass with stored user password
             if (password_verify($this->input->post('password'), $user->password)) {
@@ -119,7 +127,8 @@ class Auth extends MY_Controller
                 $this->load->library('Sendmail');
                 $user = $this->auth->get($user_id);
                 $this->sendmail->activationEmail((array) $user);
-                //TODO: set flash msg. "check your email..."
+                // set flash msg. "check your email..."
+                set_alert('success', 'Please check your email inbox.');
                 // redirect to login page
                 redirect('login');
             }
@@ -145,10 +154,9 @@ class Auth extends MY_Controller
 
     // Private methods
 
-    public function _redirect_if_logged_in()
+    public function _logged_in()
     {
         if ((bool) $this->session->userdata('logged_in')) {
-            echo 'tu';
             redirect('home');
         }
     }

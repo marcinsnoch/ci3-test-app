@@ -7,6 +7,11 @@ class Home extends MY_Controller
     protected $models = [
     ];
 
+    protected $twig_globals = [
+        'config',
+        'session',
+    ];
+
     public function __construct()
     {
         parent::__construct();
@@ -19,9 +24,9 @@ class Home extends MY_Controller
         $this->twig->display('home/index', compact('title'));
     }
 
-    public function dwa()
+    public function test()
     {
-        echo 'Dwa';
+        $this->twig->display('home/test');
     }
 }
 

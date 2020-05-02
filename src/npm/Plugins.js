@@ -68,11 +68,6 @@ const Plugins = [
     from: "node_modules/icheck/icheck.min.js",
     to: "public/plugins/icheck/icheck.min.js",
   },
-  // Ionicons
-  {
-    from: "node_modules/ionicons/dist",
-    to: "public/plugins/ionicons",
-  },
   // jQuery
   {
     from: "node_modules/jquery/dist",
