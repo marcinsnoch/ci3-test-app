@@ -106,10 +106,8 @@ class Auth extends MY_Controller
     {
         // display forgot password form
         // get user email and check if exist
-        // exist
-        // send email: link with token
-        // not exist
-        // display message
+        // exist: send email: link with token
+        // not exist: display message
         $this->twig->display('auth/password');
     }
 
