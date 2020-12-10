@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -674,6 +674,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['es-SP'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Cargando, por favor espera';
 	  },
@@ -755,6 +761,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-SP']);

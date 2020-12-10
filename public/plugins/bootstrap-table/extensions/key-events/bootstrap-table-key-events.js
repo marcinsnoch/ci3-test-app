@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1272,6 +1272,7 @@
 	 * @update zhixin wen <wenzhixin2010@gmail.com>
 	 */
 
+	var Utils = $.fn.bootstrapTable.utils;
 	$.extend($.fn.bootstrapTable.defaults, {
 	  keyEvents: false
 	});
@@ -1308,7 +1309,7 @@
 	      var _this = this;
 
 	      $(document).off('keydown').on('keydown', function (e) {
-	        var $search = _this.$toolbar.find('.search input');
+	        var $search = Utils.getSearchInput(_this);
 
 	        var $refresh = _this.$toolbar.find('button[name="refresh"]');
 

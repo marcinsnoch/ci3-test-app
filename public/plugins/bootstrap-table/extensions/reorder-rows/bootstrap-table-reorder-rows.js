@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -870,12 +870,15 @@
 	  onDragClass: 'reorder_rows_onDragClass',
 	  dragHandle: '>tbody>tr>td',
 	  useRowAttrFunc: false,
+	  // eslint-disable-next-line no-unused-vars
 	  onReorderRowsDrag: function onReorderRowsDrag(row) {
 	    return false;
 	  },
+	  // eslint-disable-next-line no-unused-vars
 	  onReorderRowsDrop: function onReorderRowsDrop(row) {
 	    return false;
 	  },
+	  // eslint-disable-next-line no-unused-vars
 	  onReorderRow: function onReorderRow(newData) {
 	    return false;
 	  }
@@ -923,7 +926,7 @@
 	        setTimeout(function () {
 	          _this.makeRowsReorderable();
 
-	          onPostBody.apply();
+	          onPostBody.call(_this.options, _this.options.data);
 	        }, 1);
 	      };
 
@@ -976,7 +979,7 @@
 
 	      this.options.onReorderRowsDrop(droppedRow); // Call the event reorder-row
 
-	      this.trigger('reorder-row', newData);
+	      this.trigger('reorder-row', newData, draggingRow, droppedRow);
 	    }
 	  }]);
 

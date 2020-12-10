@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1278,6 +1278,88 @@
 	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
 	addToUnscopables(FIND);
 
+	// `FlattenIntoArray` abstract operation
+	// https://tc39.github.io/proposal-flatMap/#sec-FlattenIntoArray
+	var flattenIntoArray = function (target, original, source, sourceLen, start, depth, mapper, thisArg) {
+	  var targetIndex = start;
+	  var sourceIndex = 0;
+	  var mapFn = mapper ? bindContext(mapper, thisArg, 3) : false;
+	  var element;
+
+	  while (sourceIndex < sourceLen) {
+	    if (sourceIndex in source) {
+	      element = mapFn ? mapFn(source[sourceIndex], sourceIndex, original) : source[sourceIndex];
+
+	      if (depth > 0 && isArray(element)) {
+	        targetIndex = flattenIntoArray(target, original, element, toLength(element.length), targetIndex, depth - 1) - 1;
+	      } else {
+	        if (targetIndex >= 0x1FFFFFFFFFFFFF) throw TypeError('Exceed the acceptable array length');
+	        target[targetIndex] = element;
+	      }
+
+	      targetIndex++;
+	    }
+	    sourceIndex++;
+	  }
+	  return targetIndex;
+	};
+
+	var flattenIntoArray_1 = flattenIntoArray;
+
+	// `Array.prototype.flat` method
+	// https://github.com/tc39/proposal-flatMap
+	_export({ target: 'Array', proto: true }, {
+	  flat: function flat(/* depthArg = 1 */) {
+	    var depthArg = arguments.length ? arguments[0] : undefined;
+	    var O = toObject(this);
+	    var sourceLen = toLength(O.length);
+	    var A = arraySpeciesCreate(O, 0);
+	    A.length = flattenIntoArray_1(A, O, O, sourceLen, 0, depthArg === undefined ? 1 : toInteger(depthArg));
+	    return A;
+	  }
+	});
+
+	var $includes = arrayIncludes.includes;
+
+
+	// `Array.prototype.includes` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.includes
+	_export({ target: 'Array', proto: true }, {
+	  includes: function includes(el /* , fromIndex = 0 */) {
+	    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
+	addToUnscopables('includes');
+
+	var sloppyArrayMethod = function (METHOD_NAME, argument) {
+	  var method = [][METHOD_NAME];
+	  return !method || !fails(function () {
+	    // eslint-disable-next-line no-useless-call,no-throw-literal
+	    method.call(null, argument || function () { throw 1; }, 1);
+	  });
+	};
+
+	var $indexOf = arrayIncludes.indexOf;
+
+
+	var nativeIndexOf = [].indexOf;
+
+	var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
+	var SLOPPY_METHOD = sloppyArrayMethod('indexOf');
+
+	// `Array.prototype.indexOf` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.indexof
+	_export({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || SLOPPY_METHOD }, {
+	  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
+	    return NEGATIVE_ZERO
+	      // convert -0 to +0
+	      ? nativeIndexOf.apply(this, arguments) || 0
+	      : $indexOf(this, searchElement, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
 	var correctPrototypeGetter = !fails(function () {
 	  function F() { /* empty */ }
 	  F.prototype.constructor = null;
@@ -1483,22 +1565,14 @@
 	addToUnscopables('values');
 	addToUnscopables('entries');
 
-	var sloppyArrayMethod = function (METHOD_NAME, argument) {
-	  var method = [][METHOD_NAME];
-	  return !method || !fails(function () {
-	    // eslint-disable-next-line no-useless-call,no-throw-literal
-	    method.call(null, argument || function () { throw 1; }, 1);
-	  });
-	};
-
 	var nativeJoin = [].join;
 
 	var ES3_STRINGS = indexedObject != Object;
-	var SLOPPY_METHOD = sloppyArrayMethod('join', ',');
+	var SLOPPY_METHOD$1 = sloppyArrayMethod('join', ',');
 
 	// `Array.prototype.join` method
 	// https://tc39.github.io/ecma262/#sec-array.prototype.join
-	_export({ target: 'Array', proto: true, forced: ES3_STRINGS || SLOPPY_METHOD }, {
+	_export({ target: 'Array', proto: true, forced: ES3_STRINGS || SLOPPY_METHOD$1 }, {
 	  join: function join(separator) {
 	    return nativeJoin.call(toIndexedObject(this), separator === undefined ? ',' : separator);
 	  }
@@ -1570,9 +1644,9 @@
 	  test.sort(null);
 	});
 	// Old WebKit
-	var SLOPPY_METHOD$1 = sloppyArrayMethod('sort');
+	var SLOPPY_METHOD$2 = sloppyArrayMethod('sort');
 
-	var FORCED$1 = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || SLOPPY_METHOD$1;
+	var FORCED$1 = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || SLOPPY_METHOD$2;
 
 	// `Array.prototype.sort` method
 	// https://tc39.github.io/ecma262/#sec-array.prototype.sort
@@ -1582,6 +1656,62 @@
 	      ? nativeSort.call(toObject(this))
 	      : nativeSort.call(toObject(this), aFunction$1(comparefn));
 	  }
+	});
+
+	// this method was added to unscopables after implementation
+	// in popular engines, so it's moved to a separate module
+
+
+	addToUnscopables('flat');
+
+	var nativeAssign = Object.assign;
+	var defineProperty$3 = Object.defineProperty;
+
+	// `Object.assign` method
+	// https://tc39.github.io/ecma262/#sec-object.assign
+	var objectAssign = !nativeAssign || fails(function () {
+	  // should have correct order of operations (Edge bug)
+	  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$3({}, 'a', {
+	    enumerable: true,
+	    get: function () {
+	      defineProperty$3(this, 'b', {
+	        value: 3,
+	        enumerable: false
+	      });
+	    }
+	  }), { b: 2 })).b !== 1) return true;
+	  // should work with symbols and should have deterministic property order (V8 bug)
+	  var A = {};
+	  var B = {};
+	  // eslint-disable-next-line no-undef
+	  var symbol = Symbol();
+	  var alphabet = 'abcdefghijklmnopqrst';
+	  A[symbol] = 7;
+	  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
+	  return nativeAssign({}, A)[symbol] != 7 || objectKeys(nativeAssign({}, B)).join('') != alphabet;
+	}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
+	  var T = toObject(target);
+	  var argumentsLength = arguments.length;
+	  var index = 1;
+	  var getOwnPropertySymbols = objectGetOwnPropertySymbols.f;
+	  var propertyIsEnumerable = objectPropertyIsEnumerable.f;
+	  while (argumentsLength > index) {
+	    var S = indexedObject(arguments[index++]);
+	    var keys = getOwnPropertySymbols ? objectKeys(S).concat(getOwnPropertySymbols(S)) : objectKeys(S);
+	    var length = keys.length;
+	    var j = 0;
+	    var key;
+	    while (length > j) {
+	      key = keys[j++];
+	      if (!descriptors || propertyIsEnumerable.call(S, key)) T[key] = S[key];
+	    }
+	  } return T;
+	} : nativeAssign;
+
+	// `Object.assign` method
+	// https://tc39.github.io/ecma262/#sec-object.assign
+	_export({ target: 'Object', stat: true, forced: Object.assign !== objectAssign }, {
+	  assign: objectAssign
 	});
 
 	var TO_STRING_TAG$1 = wellKnownSymbol('toStringTag');
@@ -1853,6 +1983,12 @@
 	  return "\n  <html>\n  <head>\n  <style type=\"text/css\" media=\"print\">\n  @page {\n    size: auto;\n    margin: 25px 0 25px 0;\n  }\n  </style>\n  <style type=\"text/css\" media=\"all\">\n  table {\n    border-collapse: collapse;\n    font-size: 12px;\n  }\n  table, th, td {\n    border: 1px solid grey;\n  }\n  th, td {\n    text-align: center;\n    vertical-align: middle;\n  }\n  p {\n    font-weight: bold;\n    margin-left:20px;\n  }\n  table {\n    width:94%;\n    margin-left:3%;\n    margin-right:3%;\n  }\n  div.bs-table-print {\n    text-align:center;\n  }\n  </style>\n  </head>\n  <title>Print Table</title>\n  <body>\n  <p>Printed on: ".concat(new Date(), " </p>\n  <div class=\"bs-table-print\">").concat(table, "</div>\n  </body>\n  </html>");
 	}
 
+	$.extend($.fn.bootstrapTable.locales, {
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  }
+	});
+	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales);
 	$.extend($.fn.bootstrapTable.defaults, {
 	  showPrint: false,
 	  printAsFilteredAndSortedOnUI: true,
@@ -1869,7 +2005,8 @@
 	});
 	$.extend($.fn.bootstrapTable.defaults.icons, {
 	  print: {
-	    bootstrap3: 'glyphicon-print icon-share'
+	    bootstrap3: 'glyphicon-print icon-share',
+	    'bootstrap-table': 'icon-printer'
 	  }[$.fn.bootstrapTable.theme] || 'fa-print'
 	});
 
@@ -1885,32 +2022,72 @@
 	  }
 
 	  _createClass(_class, [{
-	    key: "initToolbar",
-	    value: function initToolbar() {
-	      var _get2,
-	          _this = this;
-
-	      this.showToolbar = this.showToolbar || this.options.showPrint;
+	    key: "init",
+	    value: function init() {
+	      var _get2;
 
 	      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
 	        args[_key] = arguments[_key];
 	      }
 
-	      (_get2 = _get(_getPrototypeOf(_class.prototype), "initToolbar", this)).call.apply(_get2, [this].concat(args));
+	      (_get2 = _get(_getPrototypeOf(_class.prototype), "init", this)).call.apply(_get2, [this].concat(args));
 
 	      if (!this.options.showPrint) {
 	        return;
 	      }
 
-	      var $btnGroup = this.$toolbar.find('>.columns');
-	      var $print = $btnGroup.find('button.bs-print');
+	      this.mergedCells = [];
+	    }
+	  }, {
+	    key: "initToolbar",
+	    value: function initToolbar() {
+	      var _this = this,
+	          _get3;
 
-	      if (!$print.length) {
-	        $print = $("\n        <button class=\"".concat(this.constants.buttonsClass, " bs-print\" type=\"button\">\n        <i class=\"").concat(this.options.iconsPrefix, " ").concat(this.options.icons.print, "\"></i>\n        </button>")).appendTo($btnGroup);
+	      this.showToolbar = this.showToolbar || this.options.showPrint;
+
+	      if (this.options.showPrint) {
+	        this.buttons = Object.assign(this.buttons, {
+	          print: {
+	            text: this.options.formatPrint(),
+	            icon: this.options.icons.print,
+	            event: function event() {
+	              _this.doPrint(_this.options.printAsFilteredAndSortedOnUI ? _this.getData() : _this.options.data.slice(0));
+	            },
+	            attributes: {
+	              'aria-label': this.options.formatPrint(),
+	              title: this.options.formatPrint()
+	            }
+	          }
+	        });
 	      }
 
-	      $print.off('click').on('click', function () {
-	        _this.doPrint(_this.options.printAsFilteredAndSortedOnUI ? _this.getData() : _this.options.data.slice(0));
+	      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	        args[_key2] = arguments[_key2];
+	      }
+
+	      (_get3 = _get(_getPrototypeOf(_class.prototype), "initToolbar", this)).call.apply(_get3, [this].concat(args));
+	    }
+	  }, {
+	    key: "mergeCells",
+	    value: function mergeCells(options) {
+	      _get(_getPrototypeOf(_class.prototype), "mergeCells", this).call(this, options);
+
+	      if (!this.options.showPrint) {
+	        return;
+	      }
+
+	      var col = this.getVisibleFields().indexOf(options.field);
+
+	      if (Utils.hasDetailViewIcon(this.options)) {
+	        col += 1;
+	      }
+
+	      this.mergedCells.push({
+	        row: options.index,
+	        col: col,
+	        rowspan: options.rowspan || 1,
+	        colspan: options.colspan || 1
 	      });
 	    }
 	  }, {
@@ -1932,12 +2109,12 @@
 
 	        try {
 	          for (var _iterator = columnsArray[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            var _columns = _step.value;
+	            var _columns2 = _step.value;
 	            html.push('<tr>');
 
-	            for (var h = 0; h < _columns.length; h++) {
-	              if (!_columns[h].printIgnore) {
-	                html.push("<th\n              ".concat(Utils.sprintf(' rowspan="%s"', _columns[h].rowspan), "\n              ").concat(Utils.sprintf(' colspan="%s"', _columns[h].colspan), "\n              >").concat(_columns[h].title, "</th>"));
+	            for (var _h = 0; _h < _columns2.length; _h++) {
+	              if (!_columns2[_h].printIgnore) {
+	                html.push("<th\n              ".concat(Utils.sprintf(' rowspan="%s"', _columns2[_h].rowspan), "\n              ").concat(Utils.sprintf(' colspan="%s"', _columns2[_h].colspan), "\n              >").concat(_columns2[_h].title, "</th>"));
 	              }
 	            }
 
@@ -1959,20 +2136,75 @@
 	        }
 
 	        html.push('</thead><tbody>');
+	        var dontRender = [];
+
+	        if (_this2.mergedCells) {
+	          for (var mc = 0; mc < _this2.mergedCells.length; mc++) {
+	            var currentMergedCell = _this2.mergedCells[mc];
+
+	            for (var rs = 0; rs < currentMergedCell.rowspan; rs++) {
+	              var row = currentMergedCell.row + rs;
+
+	              for (var cs = 0; cs < currentMergedCell.colspan; cs++) {
+	                var col = currentMergedCell.col + cs;
+	                dontRender.push("".concat(row, ",").concat(col));
+	              }
+	            }
+	          }
+	        }
 
 	        for (var i = 0; i < data.length; i++) {
 	          html.push('<tr>');
+	          var columns = columnsArray.flat(1);
+	          columns.sort(function (c1, c2) {
+	            return c1.colspanIndex - c2.colspanIndex;
+	          });
+
+	          for (var j = 0; j < columns.length; j++) {
+	            if (columns[j].colspanGroup > 0) continue;
+	            var rowspan = 0;
+	            var colspan = 0;
+
+	            if (_this2.mergedCells) {
+	              for (var _mc = 0; _mc < _this2.mergedCells.length; _mc++) {
+	                var _currentMergedCell = _this2.mergedCells[_mc];
+
+	                if (_currentMergedCell.col === j && _currentMergedCell.row === i) {
+	                  rowspan = _currentMergedCell.rowspan;
+	                  colspan = _currentMergedCell.colspan;
+	                }
+	              }
+	            }
+
+	            if (!columns[j].printIgnore && columns[j].field && (!dontRender.includes("".concat(i, ",").concat(j)) || rowspan > 0 && colspan > 0)) {
+	              if (rowspan > 0 && colspan > 0) {
+	                html.push("<td ".concat(Utils.sprintf(' rowspan="%s"', rowspan), " ").concat(Utils.sprintf(' colspan="%s"', colspan), ">"), formatValue(data[i], i, columns[j]), '</td>');
+	              } else {
+	                html.push('<td>', formatValue(data[i], i, columns[j]), '</td>');
+	              }
+	            }
+	          }
+
+	          html.push('</tr>');
+	        }
+
+	        html.push('</tbody>');
+
+	        if (_this2.options.showFooter) {
+	          html.push('<footer><tr>');
 	          var _iteratorNormalCompletion2 = true;
 	          var _didIteratorError2 = false;
 	          var _iteratorError2 = undefined;
 
 	          try {
 	            for (var _iterator2 = columnsArray[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	              var columns = _step2.value;
+	              var _columns = _step2.value;
 
-	              for (var j = 0; j < columns.length; j++) {
-	                if (!columns[j].printIgnore && columns[j].field) {
-	                  html.push('<td>', formatValue(data[i], i, columns[j]), '</td>');
+	              for (var h = 0; h < _columns.length; h++) {
+	                if (!_columns[h].printIgnore) {
+	                  var footerData = Utils.trToData(_columns, _this2.$el.find('>tfoot>tr'));
+	                  var footerValue = Utils.calculateObjectValue(_columns[h], _columns[h].footerFormatter, [data], footerData[0] && footerData[0][_columns[h].field] || '');
+	                  html.push("<th>".concat(footerValue, "</th>"));
 	                }
 	              }
 	            }
@@ -1991,10 +2223,10 @@
 	            }
 	          }
 
-	          html.push('</tr>');
+	          html.push('</tr></footer>');
 	        }
 
-	        html.push('</tbody></table>');
+	        html.push('</table>');
 	        return html.join('');
 	      };
 

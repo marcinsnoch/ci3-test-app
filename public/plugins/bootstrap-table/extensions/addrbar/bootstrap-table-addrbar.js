@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1549,6 +1549,7 @@
 	    // 搜索name=general这种形式的字符串(&是分隔符)
 	    var pattern = "".concat(key, "=([^&]*)");
 	    var targetStr = "".concat(key, "=").concat(val);
+	    if (val === undefined) continue;
 	    /*
 	     * 如果目标url中包含了key键, 我们需要将它替换成我们自己的val
 	     * 不然就直接添加好了.
@@ -1569,6 +1570,29 @@
 
 	  return url;
 	}
+	/*
+	* function: _updateHistoryState
+	* var _prefix = this.options.addrPrefix || ''
+	* var table = this
+	* _updateHistoryState( table,_prefix)
+	* returns void
+	*/
+
+
+	function _updateHistoryState(table, _prefix) {
+	  var params = {};
+	  params["".concat(_prefix, "page")] = table.options.pageNumber;
+	  params["".concat(_prefix, "size")] = table.options.pageSize;
+	  params["".concat(_prefix, "order")] = table.options.sortOrder;
+	  params["".concat(_prefix, "sort")] = table.options.sortName;
+	  params["".concat(_prefix, "search")] = table.options.searchText;
+	  window.history.pushState({}, '', _buildUrl(params));
+	}
+
+	$.extend($.fn.bootstrapTable.defaults, {
+	  addrbar: false,
+	  addrPrefix: ''
+	});
 
 	$.BootstrapTable =
 	/*#__PURE__*/
@@ -1587,32 +1611,37 @@
 	      var _this = this,
 	          _get2;
 
-	      if (this.options.pagination && this.options.sidePagination === 'server' && this.options.addrbar) {
+	      if (this.options.pagination && this.options.addrbar) {
 	        // 标志位, 初始加载后关闭
 	        this.addrbarInit = true;
+	        this.options.pageNumber = +this.getDefaultOptionValue('pageNumber', 'page');
+	        this.options.pageSize = +this.getDefaultOptionValue('pageSize', 'size');
+	        this.options.sortOrder = this.getDefaultOptionValue('sortOrder', 'order');
+	        this.options.sortName = this.getDefaultOptionValue('sortName', 'sort');
+	        this.options.searchText = this.getDefaultOptionValue('searchText', 'search');
 
-	        var _prefix = this.options.addrPrefix || ''; // 优先级排序: 用户指定值最优先, 未指定时从地址栏获取, 未获取到时采用默认值
+	        var _prefix = this.options.addrPrefix || '';
 
-
-	        this.options.pageNumber = +_GET("".concat(_prefix, "page")) || $.BootstrapTable.DEFAULTS.pageNumber;
-	        this.options.pageSize = +_GET("".concat(_prefix, "size")) || $.BootstrapTable.DEFAULTS.pageSize;
-	        this.options.sortOrder = _GET("".concat(_prefix, "order")) || $.BootstrapTable.DEFAULTS.sortOrder;
-	        this.options.sortName = _GET("".concat(_prefix, "sort")) || $.BootstrapTable.DEFAULTS.sortName;
-	        this.options.searchText = _GET("".concat(_prefix, "search")) || $.BootstrapTable.DEFAULTS.searchText;
 	        var _onLoadSuccess = this.options.onLoadSuccess;
+	        var _onPageChange = this.options.onPageChange;
 
 	        this.options.onLoadSuccess = function (data) {
 	          if (_this.addrbarInit) {
 	            _this.addrbarInit = false;
 	          } else {
-	            var params = {};
-	            params["".concat(_prefix, "page")] = _this.options.pageNumber, params["".concat(_prefix, "size")] = _this.options.pageSize, params["".concat(_prefix, "order")] = _this.options.sortOrder, params["".concat(_prefix, "sort")] = _this.options.sortName, params["".concat(_prefix, "search")] = _this.options.searchText; // h5提供的修改浏览器地址栏的方法
-
-	            window.history.pushState({}, '', _buildUrl(params));
+	            _updateHistoryState(_this, _prefix);
 	          }
 
 	          if (_onLoadSuccess) {
 	            _onLoadSuccess.call(_this, data);
+	          }
+	        };
+
+	        this.options.onPageChange = function (number, size) {
+	          _updateHistoryState(_this, _prefix);
+
+	          if (_onPageChange) {
+	            _onPageChange.call(_this, number, size);
 	          }
 	        };
 	      }
@@ -1622,6 +1651,22 @@
 	      }
 
 	      (_get2 = _get(_getPrototypeOf(_class.prototype), "init", this)).call.apply(_get2, [this].concat(args));
+	    }
+	    /*
+	     * Priority order:
+	     * The value specified by the user has the highest priority.
+	     * If it is not specified, it will be obtained from the address bar.
+	     * If it is not obtained, the default value will be used.
+	     */
+
+	  }, {
+	    key: "getDefaultOptionValue",
+	    value: function getDefaultOptionValue(optionName, prefixName) {
+	      if (this.options[optionName] !== $.BootstrapTable.DEFAULTS[optionName]) {
+	        return this.options[optionName];
+	      }
+
+	      return _GET("".concat(this.options.addrPrefix || '').concat(prefixName)) || $.BootstrapTable.DEFAULTS[optionName];
 	    }
 	  }]);
 

@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1025,6 +1025,7 @@
 	        return;
 	      }
 
+	      this.$tableBody.find('.sticky-header-container,.sticky_anchor_begin,.sticky_anchor_end').remove();
 	      this.$el.before('<div class="sticky-header-container"></div>');
 	      this.$el.before('<div class="sticky_anchor_begin"></div>');
 	      this.$el.after('<div class="sticky_anchor_end"></div>');
@@ -1036,10 +1037,12 @@
 	      this.$stickyEnd = this.$tableBody.find('.sticky_anchor_end');
 	      this.$stickyHeader = this.$header.clone(true, true); // render sticky on window scroll or resize
 
-	      $(window).off('resize.sticky-header-table').on('resize.sticky-header-table', function () {
+	      var resizeEvent = Utils.getEventName('resize.sticky-header-table', this.$el.attr('id'));
+	      var scrollEvent = Utils.getEventName('scroll.sticky-header-table', this.$el.attr('id'));
+	      $(window).off(resizeEvent).on(resizeEvent, function () {
 	        return _this.renderStickyHeader();
 	      });
-	      $(window).off('scroll.sticky-header-table').on('scroll.sticky-header-table', function () {
+	      $(window).off(scrollEvent).on(scrollEvent, function () {
 	        return _this.renderStickyHeader();
 	      });
 	      this.$tableBody.off('scroll').on('scroll', function () {
@@ -1076,9 +1079,20 @@
 	      });
 	    }
 	  }, {
+	    key: "horizontalScroll",
+	    value: function horizontalScroll() {
+	      var _this3 = this;
+
+	      _get(_getPrototypeOf(_class.prototype), "horizontalScroll", this).call(this);
+
+	      this.$tableBody.on('scroll', function () {
+	        return _this3.matchPositionX();
+	      });
+	    }
+	  }, {
 	    key: "renderStickyHeader",
 	    value: function renderStickyHeader() {
-	      var _this3 = this;
+	      var _this4 = this;
 
 	      var that = this;
 	      this.$stickyHeader = this.$header.clone(true, true);
@@ -1088,14 +1102,14 @@
 	          var $target = $(e.target);
 	          var value = $target.val();
 	          var field = $target.parents('th').data('field');
-	          var $coreTh = that.$header.find('th[data-field="' + field + '"]');
+	          var $coreTh = that.$header.find("th[data-field=\"".concat(field, "\"]"));
 
 	          if ($target.is('input')) {
 	            $coreTh.find('input').val(value);
 	          } else if ($target.is('select')) {
 	            var $select = $coreTh.find('select');
 	            $select.find('option[selected]').removeAttr('selected');
-	            $select.find('option[value="' + value + '"]').attr('selected', true);
+	            $select.find("option[value=\"".concat(value, "\"]")).attr('selected', true);
 	          }
 
 	          that.triggerSearch();
@@ -1111,7 +1125,7 @@
 	      if (top > start && top <= end) {
 	        // ensure clone and source column widths are the same
 	        this.$stickyHeader.find('tr:eq(0)').find('th').each(function (index, el) {
-	          $(el).css('min-width', _this3.$header.find('tr:eq(0)').find('th').eq(index).css('width'));
+	          $(el).css('min-width', _this4.$header.find('tr:eq(0)').find('th').eq(index).css('width'));
 	        }); // match bootstrap table style
 
 	        this.$stickyContainer.show().addClass('fix-sticky fixed-table-container'); // stick it in position

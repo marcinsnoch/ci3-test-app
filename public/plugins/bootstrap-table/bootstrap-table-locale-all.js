@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -673,7 +673,13 @@
 	 * Author: Phillip Kruger <phillip.kruger@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['af-ZA'] = {
+	$.fn.bootstrapTable.locales['af-ZA'] = $.fn.bootstrapTable.locales['af'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Besig om te laai, wag asseblief';
 	  },
@@ -755,6 +761,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['af-ZA']);
@@ -764,7 +779,13 @@
 	 * Author: Zhixin Wen<wenzhixin2010@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['ar-SA'] = {
+	$.fn.bootstrapTable.locales['ar-SA'] = $.fn.bootstrapTable.locales['ar'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'جاري التحميل, يرجى الإنتظار';
 	  },
@@ -847,9 +868,124 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ar-SA']);
+
+	/**
+	 * Bootstrap Table English translation
+	 * Author: Mikhail Kalatchev <kalatchev[at]gmail.com>
+	 */
+
+	$.fn.bootstrapTable.locales['bg-BG'] = $.fn.bootstrapTable.locales['bg'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
+	  formatLoadingMessage: function formatLoadingMessage() {
+	    return 'Зареждане, моля изчакайте';
+	  },
+	  formatRecordsPerPage: function formatRecordsPerPage(pageNumber) {
+	    return "".concat(pageNumber, " \u0440\u0435\u0434\u0430 \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430");
+	  },
+	  formatShowingRows: function formatShowingRows(pageFrom, pageTo, totalRows, totalNotFiltered) {
+	    if (totalNotFiltered !== undefined && totalNotFiltered > 0 && totalNotFiltered > totalRows) {
+	      return "\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u0438 \u0440\u0435\u0434\u043E\u0432\u0435 \u043E\u0442 ".concat(pageFrom, " \u0434\u043E ").concat(pageTo, " \u043E\u0442 ").concat(totalRows, " \u0440\u0435\u0434\u0430 (\u0444\u0438\u043B\u0442\u0440\u0438\u0440\u0430\u043D\u0438 \u043E\u0442 \u043E\u0431\u0449\u043E ").concat(totalNotFiltered, " \u0440\u0435\u0434\u0430)");
+	    }
+
+	    return "\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u0438 \u0440\u0435\u0434\u043E\u0432\u0435 \u043E\u0442 ".concat(pageFrom, " \u0434\u043E ").concat(pageTo, " \u043E\u0442 \u043E\u0431\u0449\u043E ").concat(totalRows, " \u0440\u0435\u0434\u0430");
+	  },
+	  formatSRPaginationPreText: function formatSRPaginationPreText() {
+	    return 'предишна страница';
+	  },
+	  formatSRPaginationPageText: function formatSRPaginationPageText(page) {
+	    return "\u0434\u043E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ".concat(page);
+	  },
+	  formatSRPaginationNextText: function formatSRPaginationNextText() {
+	    return 'следваща страница';
+	  },
+	  formatDetailPagination: function formatDetailPagination(totalRows) {
+	    return "\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u0438 ".concat(totalRows, " \u0440\u0435\u0434\u0430");
+	  },
+	  formatClearSearch: function formatClearSearch() {
+	    return 'Изчистване на търсенето';
+	  },
+	  formatSearch: function formatSearch() {
+	    return 'Търсене';
+	  },
+	  formatNoMatches: function formatNoMatches() {
+	    return 'Не са намерени съвпадащи записи';
+	  },
+	  formatPaginationSwitch: function formatPaginationSwitch() {
+	    return 'Скриване/Показване на странициране';
+	  },
+	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
+	    return 'Показване на странициране';
+	  },
+	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
+	    return 'Скриване на странициране';
+	  },
+	  formatRefresh: function formatRefresh() {
+	    return 'Обновяване';
+	  },
+	  formatToggle: function formatToggle() {
+	    return 'Превключване';
+	  },
+	  formatToggleOn: function formatToggleOn() {
+	    return 'Показване на изглед карта';
+	  },
+	  formatToggleOff: function formatToggleOff() {
+	    return 'Скриване на изглед карта';
+	  },
+	  formatColumns: function formatColumns() {
+	    return 'Колони';
+	  },
+	  formatColumnsToggleAll: function formatColumnsToggleAll() {
+	    return 'Превключване на всички';
+	  },
+	  formatFullscreen: function formatFullscreen() {
+	    return 'Цял екран';
+	  },
+	  formatAllRows: function formatAllRows() {
+	    return 'Всички';
+	  },
+	  formatAutoRefresh: function formatAutoRefresh() {
+	    return 'Автоматично обновяване';
+	  },
+	  formatExport: function formatExport() {
+	    return 'Експорт на данни';
+	  },
+	  formatJumpTo: function formatJumpTo() {
+	    return 'ОТИДИ';
+	  },
+	  formatAdvancedSearch: function formatAdvancedSearch() {
+	    return 'Разширено търсене';
+	  },
+	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
+	    return 'Затваряне';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
+	  }
+	};
+	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['bg-BG']);
 
 	/**
 	 * Bootstrap Table Catalan translation
@@ -857,7 +993,13 @@
 	 *          Claudi Martinez<claudix.kernel@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['ca-ES'] = {
+	$.fn.bootstrapTable.locales['ca-ES'] = $.fn.bootstrapTable.locales['ca'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Espereu, si us plau';
 	  },
@@ -939,6 +1081,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ca-ES']);
@@ -949,7 +1100,13 @@
 	 * Author: Jakub Svestka <svestka1999@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['cs-CZ'] = {
+	$.fn.bootstrapTable.locales['cs-CZ'] = $.fn.bootstrapTable.locales['cs'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Čekejte, prosím';
 	  },
@@ -1031,6 +1188,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['cs-CZ']);
@@ -1040,7 +1206,13 @@
 	 * Author: Your Name Jan Borup Coyle, github@coyle.dk
 	 */
 
-	$.fn.bootstrapTable.locales['da-DK'] = {
+	$.fn.bootstrapTable.locales['da-DK'] = $.fn.bootstrapTable.locales['da'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Indlæser, vent venligst';
 	  },
@@ -1122,6 +1294,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['da-DK']);
@@ -1131,7 +1312,13 @@
 	* Author: Paul Mohr - Sopamo<p.mohr@sopamo.de>
 	*/
 
-	$.fn.bootstrapTable.locales['de-DE'] = {
+	$.fn.bootstrapTable.locales['de-DE'] = $.fn.bootstrapTable.locales['de'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Zeilen kopieren';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Drucken';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Lade, bitte warten';
 	  },
@@ -1206,13 +1393,22 @@
 	    return 'Datenexport';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'Springen';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
 	    return 'Erweiterte Suche';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Schließen';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Verstecke/Zeige Filter';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Verstecke Filter';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Zeige Filter';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['de-DE']);
@@ -1222,7 +1418,13 @@
 	 * Author: giannisdallas
 	 */
 
-	$.fn.bootstrapTable.locales['el-GR'] = {
+	$.fn.bootstrapTable.locales['el-GR'] = $.fn.bootstrapTable.locales['el'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Φορτώνει, παρακαλώ περιμένετε';
 	  },
@@ -1304,6 +1506,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['el-GR']);
@@ -1313,7 +1524,13 @@
 	 * Author: Zhixin Wen<wenzhixin2010@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['en-US'] = {
+	$.fn.bootstrapTable.locales['en-US'] = $.fn.bootstrapTable.locales['en'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Loading, please wait';
 	  },
@@ -1395,6 +1612,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['en-US']);
@@ -1406,6 +1632,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['es-AR'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copiar Filas';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Imprimir';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Cargando, espere por favor';
 	  },
@@ -1487,6 +1719,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Cerrar';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-AR']);
@@ -1498,6 +1739,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['es-CL'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copiar Filas';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Imprimir';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Cargando, espere por favor';
 	  },
@@ -1506,22 +1753,22 @@
 	  },
 	  formatShowingRows: function formatShowingRows(pageFrom, pageTo, totalRows, totalNotFiltered) {
 	    if (totalNotFiltered !== undefined && totalNotFiltered > 0 && totalNotFiltered > totalRows) {
-	      return "Mostrando ".concat(pageFrom, " a ").concat(pageTo, " de ").concat(totalRows, " filas (filtered from ").concat(totalNotFiltered, " total rows)");
+	      return "Mostrando ".concat(pageFrom, " a ").concat(pageTo, " de ").concat(totalRows, " filas (filtrado de ").concat(totalNotFiltered, " filas totales)");
 	    }
 
 	    return "Mostrando ".concat(pageFrom, " a ").concat(pageTo, " de ").concat(totalRows, " filas");
 	  },
 	  formatSRPaginationPreText: function formatSRPaginationPreText() {
-	    return 'previous page';
+	    return 'página anterior';
 	  },
 	  formatSRPaginationPageText: function formatSRPaginationPageText(page) {
-	    return "to page ".concat(page);
+	    return "a la p\xE1gina ".concat(page);
 	  },
 	  formatSRPaginationNextText: function formatSRPaginationNextText() {
-	    return 'next page';
+	    return 'siguiente página';
 	  },
 	  formatDetailPagination: function formatDetailPagination(totalRows) {
-	    return "Showing ".concat(totalRows, " rows");
+	    return "Mostrando ".concat(totalRows, " filas");
 	  },
 	  formatClearSearch: function formatClearSearch() {
 	    return 'Limpiar búsqueda';
@@ -1533,13 +1780,13 @@
 	    return 'No se encontraron registros';
 	  },
 	  formatPaginationSwitch: function formatPaginationSwitch() {
-	    return "Ocultar/Mostrar paginaci\xF3n";
+	    return 'Ocultar/Mostrar paginación';
 	  },
 	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
-	    return 'Show pagination';
+	    return 'Mostrar paginación';
 	  },
 	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
-	    return 'Hide pagination';
+	    return 'Ocultar paginación';
 	  },
 	  formatRefresh: function formatRefresh() {
 	    return 'Refrescar';
@@ -1548,37 +1795,46 @@
 	    return 'Cambiar';
 	  },
 	  formatToggleOn: function formatToggleOn() {
-	    return 'Show card view';
+	    return 'Mostrar vista de carta';
 	  },
 	  formatToggleOff: function formatToggleOff() {
-	    return 'Hide card view';
+	    return 'Ocultar vista de carta';
 	  },
 	  formatColumns: function formatColumns() {
 	    return 'Columnas';
 	  },
 	  formatColumnsToggleAll: function formatColumnsToggleAll() {
-	    return 'Toggle all';
+	    return 'Cambiar todo';
 	  },
 	  formatFullscreen: function formatFullscreen() {
-	    return 'Fullscreen';
+	    return 'Pantalla completa';
 	  },
 	  formatAllRows: function formatAllRows() {
 	    return 'Todo';
 	  },
 	  formatAutoRefresh: function formatAutoRefresh() {
-	    return 'Auto Refresh';
+	    return 'Auto Recargar';
 	  },
 	  formatExport: function formatExport() {
-	    return 'Export data';
+	    return 'Exportar datos';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'IR';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
-	    return 'Advanced search';
+	    return 'Búsqueda avanzada';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
-	    return 'Close';
+	    return 'Cerrar';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-CL']);
@@ -1589,6 +1845,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['es-CR'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Cargando, por favor espere';
 	  },
@@ -1670,6 +1932,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-CR']);
@@ -1679,7 +1950,13 @@
 	 * Author: Marc Pina<iwalkalone69@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['es-ES'] = {
+	$.fn.bootstrapTable.locales['es-ES'] = $.fn.bootstrapTable.locales['es'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copiar filas';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Imprimir';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Por favor espere';
 	  },
@@ -1688,22 +1965,22 @@
 	  },
 	  formatShowingRows: function formatShowingRows(pageFrom, pageTo, totalRows, totalNotFiltered) {
 	    if (totalNotFiltered !== undefined && totalNotFiltered > 0 && totalNotFiltered > totalRows) {
-	      return "Mostrando desde ".concat(pageFrom, " hasta ").concat(pageTo, " - En total ").concat(totalRows, " resultados (filtered from ").concat(totalNotFiltered, " total rows)");
+	      return "Mostrando desde ".concat(pageFrom, " hasta ").concat(pageTo, " - En total ").concat(totalRows, " resultados (filtrado de ").concat(totalNotFiltered, " filas totales)");
 	    }
 
 	    return "Mostrando desde ".concat(pageFrom, " hasta ").concat(pageTo, " - En total ").concat(totalRows, " resultados");
 	  },
 	  formatSRPaginationPreText: function formatSRPaginationPreText() {
-	    return 'previous page';
+	    return 'página anterior';
 	  },
 	  formatSRPaginationPageText: function formatSRPaginationPageText(page) {
-	    return "to page ".concat(page);
+	    return "a la p\xE1gina ".concat(page);
 	  },
 	  formatSRPaginationNextText: function formatSRPaginationNextText() {
-	    return 'next page';
+	    return 'siguiente página';
 	  },
 	  formatDetailPagination: function formatDetailPagination(totalRows) {
-	    return "Showing ".concat(totalRows, " rows");
+	    return "Mostrando ".concat(totalRows, " filas");
 	  },
 	  formatClearSearch: function formatClearSearch() {
 	    return 'Limpiar búsqueda';
@@ -1718,49 +1995,58 @@
 	    return 'Ocultar/Mostrar paginación';
 	  },
 	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
-	    return 'Show pagination';
+	    return 'Mostrar paginación';
 	  },
 	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
-	    return 'Hide pagination';
+	    return 'Ocultar paginación';
 	  },
 	  formatRefresh: function formatRefresh() {
-	    return 'Refrescar';
+	    return 'Recargar';
 	  },
 	  formatToggle: function formatToggle() {
 	    return 'Ocultar/Mostrar';
 	  },
 	  formatToggleOn: function formatToggleOn() {
-	    return 'Show card view';
+	    return 'Mostrar vista de carta';
 	  },
 	  formatToggleOff: function formatToggleOff() {
-	    return 'Hide card view';
+	    return 'Ocultar vista de carta';
 	  },
 	  formatColumns: function formatColumns() {
 	    return 'Columnas';
 	  },
 	  formatColumnsToggleAll: function formatColumnsToggleAll() {
-	    return 'Toggle all';
+	    return 'Cambiar todo';
 	  },
 	  formatFullscreen: function formatFullscreen() {
-	    return 'Fullscreen';
+	    return 'Pantalla completa';
 	  },
 	  formatAllRows: function formatAllRows() {
 	    return 'Todos';
 	  },
 	  formatAutoRefresh: function formatAutoRefresh() {
-	    return 'Auto Refresh';
+	    return 'Auto Recargar';
 	  },
 	  formatExport: function formatExport() {
 	    return 'Exportar los datos';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'IR';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
 	    return 'Búsqueda avanzada';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Cerrar';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-ES']);
@@ -1773,6 +2059,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['es-MX'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Cargando, espere por favor';
 	  },
@@ -1854,6 +2146,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-MX']);
@@ -1864,6 +2165,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['es-NI'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Cargando, por favor espere';
 	  },
@@ -1945,6 +2252,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-NI']);
@@ -1955,6 +2271,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['es-SP'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Cargando, por favor espera';
 	  },
@@ -2036,6 +2358,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Mostrar controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Mostrar controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['es-SP']);
@@ -2045,7 +2376,13 @@
 	 * Author: kristjan@logist.it>
 	 */
 
-	$.fn.bootstrapTable.locales['et-EE'] = {
+	$.fn.bootstrapTable.locales['et-EE'] = $.fn.bootstrapTable.locales['et'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Päring käib, palun oota';
 	  },
@@ -2127,6 +2464,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['et-EE']);
@@ -2136,7 +2482,13 @@
 	 * Author: Iker Ibarguren Berasaluze<ikerib@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['eu-EU'] = {
+	$.fn.bootstrapTable.locales['eu-EU'] = $.fn.bootstrapTable.locales['eu'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Itxaron mesedez';
 	  },
@@ -2218,6 +2570,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['eu-EU']);
@@ -2227,7 +2588,13 @@
 	 * Author: MJ Vakili <mjv.1989@Gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['fa-IR'] = {
+	$.fn.bootstrapTable.locales['fa-IR'] = $.fn.bootstrapTable.locales['fa'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'در حال بارگذاری, لطفا صبر کنید';
 	  },
@@ -2309,6 +2676,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['fa-IR']);
@@ -2318,7 +2694,13 @@
 	 * Author: Minna Lehtomäki <minna.j.lehtomaki@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['fi-FI'] = {
+	$.fn.bootstrapTable.locales['fi-FI'] = $.fn.bootstrapTable.locales['fi'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Ladataan, ole hyvä ja odota';
 	  },
@@ -2400,6 +2782,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['fi-FI']);
@@ -2411,6 +2802,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['fr-BE'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Chargement en cours';
 	  },
@@ -2492,6 +2889,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Fermer';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Cacher/Afficher controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Cacher controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Afficher controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['fr-BE']);
@@ -2502,6 +2908,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['fr-CH'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Chargement en cours';
 	  },
@@ -2583,6 +2995,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Fermer';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Cacher/Afficher controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Cacher controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Afficher controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['fr-CH']);
@@ -2594,7 +3015,13 @@
 	 *         Nevets82 <Nevets82@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['fr-FR'] = {
+	$.fn.bootstrapTable.locales['fr-FR'] = $.fn.bootstrapTable.locales['fr'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copier les lignes';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Imprimer';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Chargement en cours';
 	  },
@@ -2630,25 +3057,25 @@
 	    return 'Aucun résultat';
 	  },
 	  formatPaginationSwitch: function formatPaginationSwitch() {
-	    return 'Cacher/Afficher pagination';
+	    return 'Masquer/Afficher la pagination';
 	  },
 	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
-	    return 'Afficher pagination';
+	    return 'Afficher la pagination';
 	  },
 	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
-	    return 'Cacher pagination';
+	    return 'Masquer la pagination';
 	  },
 	  formatRefresh: function formatRefresh() {
-	    return 'Rafraichir';
+	    return 'Actualiser';
 	  },
 	  formatToggle: function formatToggle() {
 	    return 'Basculer';
 	  },
 	  formatToggleOn: function formatToggleOn() {
-	    return 'Afficher vue carte';
+	    return 'Afficher la vue carte';
 	  },
 	  formatToggleOff: function formatToggleOff() {
-	    return 'Cacher vue carte';
+	    return 'Masquer la vue carte';
 	  },
 	  formatColumns: function formatColumns() {
 	    return 'Colonnes';
@@ -2663,19 +3090,28 @@
 	    return 'Tout';
 	  },
 	  formatAutoRefresh: function formatAutoRefresh() {
-	    return 'Rafraîchissement automatique';
+	    return 'Actualisation automatique';
 	  },
 	  formatExport: function formatExport() {
 	    return 'Exporter les données';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'Aller à';
+	    return 'ALLER';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
 	    return 'Recherche avancée';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Fermer';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Masquer/Afficher les contrôles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Masquer les contrôles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Afficher les contrôles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['fr-FR']);
@@ -2686,6 +3122,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['fr-LU'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Chargement en cours';
 	  },
@@ -2767,6 +3209,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Fermer';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Cacher/Afficher controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Cacher controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Afficher controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['fr-LU']);
@@ -2776,7 +3227,13 @@
 	 * Author: legshooter
 	 */
 
-	$.fn.bootstrapTable.locales['he-IL'] = {
+	$.fn.bootstrapTable.locales['he-IL'] = $.fn.bootstrapTable.locales['he'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'טוען, נא להמתין';
 	  },
@@ -2858,6 +3315,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['he-IL']);
@@ -2868,7 +3334,13 @@
 	* Author: Petra Štrbenac (petra.strbenac@gmail.com)
 	*/
 
-	$.fn.bootstrapTable.locales['hr-HR'] = {
+	$.fn.bootstrapTable.locales['hr-HR'] = $.fn.bootstrapTable.locales['hr'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Molimo pričekajte';
 	  },
@@ -2950,6 +3422,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['hr-HR']);
@@ -2959,7 +3440,13 @@
 	 * Author: Nagy Gergely <info@nagygergely.eu>
 	 */
 
-	$.fn.bootstrapTable.locales['hu-HU'] = {
+	$.fn.bootstrapTable.locales['hu-HU'] = $.fn.bootstrapTable.locales['hu'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Betöltés, kérem várjon';
 	  },
@@ -3041,6 +3528,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['hu-HU']);
@@ -3050,7 +3546,13 @@
 	 * Author: Andre Gardiner<andre@sirdre.com>
 	 */
 
-	$.fn.bootstrapTable.locales['id-ID'] = {
+	$.fn.bootstrapTable.locales['id-ID'] = $.fn.bootstrapTable.locales['id'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Memuat, mohon tunggu';
 	  },
@@ -3132,6 +3634,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['id-ID']);
@@ -3143,7 +3654,13 @@
 	 * Author: Alessio Felicioni <alessio.felicioni@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['it-IT'] = {
+	$.fn.bootstrapTable.locales['it-IT'] = $.fn.bootstrapTable.locales['it'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Caricamento in corso';
 	  },
@@ -3152,22 +3669,22 @@
 	  },
 	  formatShowingRows: function formatShowingRows(pageFrom, pageTo, totalRows, totalNotFiltered) {
 	    if (totalNotFiltered !== undefined && totalNotFiltered > 0 && totalNotFiltered > totalRows) {
-	      return "Visualizzazione da ".concat(pageFrom, " a ").concat(pageTo, " di ").concat(totalRows, " elementi (filtered from ").concat(totalNotFiltered, " total rows)");
+	      return "Visualizzazione da ".concat(pageFrom, " a ").concat(pageTo, " di ").concat(totalRows, " elementi (filtrati da ").concat(totalNotFiltered, " elementi totali)");
 	    }
 
 	    return "Visualizzazione da ".concat(pageFrom, " a ").concat(pageTo, " di ").concat(totalRows, " elementi");
 	  },
 	  formatSRPaginationPreText: function formatSRPaginationPreText() {
-	    return 'previous page';
+	    return 'pagina precedente';
 	  },
 	  formatSRPaginationPageText: function formatSRPaginationPageText(page) {
-	    return "to page ".concat(page);
+	    return "alla pagina ".concat(page);
 	  },
 	  formatSRPaginationNextText: function formatSRPaginationNextText() {
-	    return 'next page';
+	    return 'pagina successiva';
 	  },
 	  formatDetailPagination: function formatDetailPagination(totalRows) {
-	    return "Showing ".concat(totalRows, " rows");
+	    return "Mostrando ".concat(totalRows, " elementi");
 	  },
 	  formatClearSearch: function formatClearSearch() {
 	    return 'Pulisci filtri';
@@ -3182,10 +3699,10 @@
 	    return 'Nascondi/Mostra paginazione';
 	  },
 	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
-	    return 'Show pagination';
+	    return 'Mostra paginazione';
 	  },
 	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
-	    return 'Hide pagination';
+	    return 'Nascondi paginazione';
 	  },
 	  formatRefresh: function formatRefresh() {
 	    return 'Aggiorna';
@@ -3194,37 +3711,46 @@
 	    return 'Attiva/Disattiva';
 	  },
 	  formatToggleOn: function formatToggleOn() {
-	    return 'Show card view';
+	    return 'Mostra visuale a scheda';
 	  },
 	  formatToggleOff: function formatToggleOff() {
-	    return 'Hide card view';
+	    return 'Nascondi visuale a scheda';
 	  },
 	  formatColumns: function formatColumns() {
 	    return 'Colonne';
 	  },
 	  formatColumnsToggleAll: function formatColumnsToggleAll() {
-	    return 'Toggle all';
+	    return 'Mostra tutte';
 	  },
 	  formatFullscreen: function formatFullscreen() {
-	    return 'Fullscreen';
+	    return 'Schermo intero';
 	  },
 	  formatAllRows: function formatAllRows() {
 	    return 'Tutto';
 	  },
 	  formatAutoRefresh: function formatAutoRefresh() {
-	    return 'Auto Refresh';
+	    return 'Auto Aggiornamento';
 	  },
 	  formatExport: function formatExport() {
 	    return 'Esporta dati';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'VAI';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
-	    return 'Advanced search';
+	    return 'Filtri avanzati';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
-	    return 'Close';
+	    return 'Chiudi';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['it-IT']);
@@ -3234,7 +3760,13 @@
 	 * Author: Azamshul Azizy <azamshul@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['ja-JP'] = {
+	$.fn.bootstrapTable.locales['ja-JP'] = $.fn.bootstrapTable.locales['ja'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return '読み込み中です。少々お待ちください。';
 	  },
@@ -3316,6 +3848,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ja-JP']);
@@ -3325,7 +3866,13 @@
 	 * Author: Levan Lotuashvili <l.lotuashvili@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['ka-GE'] = {
+	$.fn.bootstrapTable.locales['ka-GE'] = $.fn.bootstrapTable.locales['ka'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'იტვირთება, გთხოვთ მოიცადოთ';
 	  },
@@ -3407,6 +3954,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ka-GE']);
@@ -3416,7 +3972,13 @@
 	 * Author: Yi Tae-Hyeong (jsonobject@gmail.com)
 	 */
 
-	$.fn.bootstrapTable.locales['ko-KR'] = {
+	$.fn.bootstrapTable.locales['ko-KR'] = $.fn.bootstrapTable.locales['ko'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return '데이터를 불러오는 중입니다';
 	  },
@@ -3498,6 +4060,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ko-KR']);
@@ -3507,7 +4078,13 @@
 	 * Author: Azamshul Azizy <azamshul@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['ms-MY'] = {
+	$.fn.bootstrapTable.locales['ms-MY'] = $.fn.bootstrapTable.locales['ms'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Permintaan sedang dimuatkan. Sila tunggu sebentar';
 	  },
@@ -3589,6 +4166,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ms-MY']);
@@ -3598,7 +4184,13 @@
 	 * Author: Jim Nordbø, jim@nordb.no
 	 */
 
-	$.fn.bootstrapTable.locales['nb-NO'] = {
+	$.fn.bootstrapTable.locales['nb-NO'] = $.fn.bootstrapTable.locales['nb'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Oppdaterer, vennligst vent';
 	  },
@@ -3680,16 +4272,31 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['nb-NO']);
 
 	/**
-	 * Bootstrap Table Dutch (Belgi�) translation
+	 * Bootstrap Table Dutch (België) translation
 	 * Author: Nevets82 <Nevets82@gmail.com>
 	 */
 
 	$.fn.bootstrapTable.locales['nl-BE'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Laden, even geduld';
 	  },
@@ -3771,6 +4378,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Sluiten';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Verberg/Toon controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Verberg controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Toon controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['nl-BE']);
@@ -3781,7 +4397,13 @@
 	 *         Nevets82 <Nevets82@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['nl-NL'] = {
+	$.fn.bootstrapTable.locales['nl-NL'] = $.fn.bootstrapTable.locales['nl'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Laden, even geduld';
 	  },
@@ -3863,6 +4485,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Sluiten';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Verberg/Toon controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Verberg controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Toon controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['nl-NL']);
@@ -3870,9 +4501,16 @@
 	/**
 	 * Bootstrap Table Polish translation
 	 * Author: zergu <michal.zagdan @ gmail com>
+	 * Update: kerogos <kerog @ wp pl>
 	 */
 
-	$.fn.bootstrapTable.locales['pl-PL'] = {
+	$.fn.bootstrapTable.locales['pl-PL'] = $.fn.bootstrapTable.locales['pl'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Kopiuj wiersze';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Ładowanie, proszę czekać';
 	  },
@@ -3887,19 +4525,19 @@
 	    return "Wy\u015Bwietlanie rekord\xF3w od ".concat(pageFrom, " do ").concat(pageTo, " z ").concat(totalRows);
 	  },
 	  formatSRPaginationPreText: function formatSRPaginationPreText() {
-	    return 'previous page';
+	    return 'poprzednia strona';
 	  },
 	  formatSRPaginationPageText: function formatSRPaginationPageText(page) {
-	    return "to page ".concat(page);
+	    return "z ".concat(page);
 	  },
 	  formatSRPaginationNextText: function formatSRPaginationNextText() {
-	    return 'next page';
+	    return 'następna strona';
 	  },
 	  formatDetailPagination: function formatDetailPagination(totalRows) {
-	    return "Showing ".concat(totalRows, " rows");
+	    return "Wy\u015Bwietla ".concat(totalRows, " wierszy");
 	  },
 	  formatClearSearch: function formatClearSearch() {
-	    return 'Clear Search';
+	    return 'Wyczyść wyszukiwanie';
 	  },
 	  formatSearch: function formatSearch() {
 	    return 'Szukaj';
@@ -3908,13 +4546,13 @@
 	    return 'Niestety, nic nie znaleziono';
 	  },
 	  formatPaginationSwitch: function formatPaginationSwitch() {
-	    return 'Hide/Show pagination';
+	    return 'Pokaż/ukryj stronicowanie';
 	  },
 	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
-	    return 'Show pagination';
+	    return 'Pokaż stronicowanie';
 	  },
 	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
-	    return 'Hide pagination';
+	    return 'Ukryj stronicowanie';
 	  },
 	  formatRefresh: function formatRefresh() {
 	    return 'Odśwież';
@@ -3923,37 +4561,46 @@
 	    return 'Przełącz';
 	  },
 	  formatToggleOn: function formatToggleOn() {
-	    return 'Show card view';
+	    return 'Pokaż układ karty';
 	  },
 	  formatToggleOff: function formatToggleOff() {
-	    return 'Hide card view';
+	    return 'Ukryj układ karty';
 	  },
 	  formatColumns: function formatColumns() {
 	    return 'Kolumny';
 	  },
 	  formatColumnsToggleAll: function formatColumnsToggleAll() {
-	    return 'Toggle all';
+	    return 'Zaznacz wszystko';
 	  },
 	  formatFullscreen: function formatFullscreen() {
 	    return 'Fullscreen';
 	  },
 	  formatAllRows: function formatAllRows() {
-	    return 'All';
+	    return 'Wszystkie';
 	  },
 	  formatAutoRefresh: function formatAutoRefresh() {
-	    return 'Auto Refresh';
+	    return 'Auto odświeżanie';
 	  },
 	  formatExport: function formatExport() {
-	    return 'Export data';
+	    return 'Eksport danych';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'Przejdź';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
-	    return 'Advanced search';
+	    return 'Wyszukiwanie zaawansowane';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
-	    return 'Close';
+	    return 'Zamknij';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Pokaż/Ukryj';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Pokaż';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Ukryj';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['pl-PL']);
@@ -3963,9 +4610,16 @@
 	 * Author: Eduardo Cerqueira<egcerqueira@gmail.com>
 	 * Update: João Mello<jmello@hotmail.com.br>
 	 * Update: Leandro Felizari<lfelizari@gmail.com>
+	 * Update: Fernando Marcos Souza Silva<fernandomarcosss@gmail.com>
 	 */
 
 	$.fn.bootstrapTable.locales['pt-BR'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Carregando, aguarde';
 	  },
@@ -3974,7 +4628,7 @@
 	  },
 	  formatShowingRows: function formatShowingRows(pageFrom, pageTo, totalRows, totalNotFiltered) {
 	    if (totalNotFiltered !== undefined && totalNotFiltered > 0 && totalNotFiltered > totalRows) {
-	      return "Exibindo ".concat(pageFrom, " at\xE9 ").concat(pageTo, " de ").concat(totalRows, " linhas (filtered from ").concat(totalNotFiltered, " total rows)");
+	      return "Exibindo ".concat(pageFrom, " at\xE9 ").concat(pageTo, " de ").concat(totalRows, " linhas (filtradas de um total de ").concat(totalNotFiltered, " linhas)");
 	    }
 
 	    return "Exibindo ".concat(pageFrom, " at\xE9 ").concat(pageTo, " de ").concat(totalRows, " linhas");
@@ -4025,7 +4679,7 @@
 	    return 'Colunas';
 	  },
 	  formatColumnsToggleAll: function formatColumnsToggleAll() {
-	    return 'Toggle all';
+	    return 'Alternar tudo';
 	  },
 	  formatFullscreen: function formatFullscreen() {
 	    return 'Tela cheia';
@@ -4047,6 +4701,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Fechar';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Ocultar/Exibir controles';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Ocultar controles';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Exibir controles';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['pt-BR']);
@@ -4056,7 +4719,13 @@
 	 * Author: Burnspirit<burnspirit@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['pt-PT'] = {
+	$.fn.bootstrapTable.locales['pt-PT'] = $.fn.bootstrapTable.locales['pt'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'A carregar, por favor aguarde';
 	  },
@@ -4138,6 +4807,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['pt-PT']);
@@ -4147,7 +4825,13 @@
 	 * Author: cristake <cristianiosif@me.com>
 	 */
 
-	$.fn.bootstrapTable.locales['ro-RO'] = {
+	$.fn.bootstrapTable.locales['ro-RO'] = $.fn.bootstrapTable.locales['ro'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Se incarca, va rugam asteptati';
 	  },
@@ -4229,6 +4913,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ro-RO']);
@@ -4238,7 +4931,13 @@
 	 * Author: Dunaevsky Maxim <dunmaksim@yandex.ru>
 	 */
 
-	$.fn.bootstrapTable.locales['ru-RU'] = {
+	$.fn.bootstrapTable.locales['ru-RU'] = $.fn.bootstrapTable.locales['ru'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Пожалуйста, подождите, идёт загрузка';
 	  },
@@ -4320,6 +5019,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ru-RU']);
@@ -4329,7 +5037,13 @@
 	 * Author: Jozef Dúc<jozef.d13@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['sk-SK'] = {
+	$.fn.bootstrapTable.locales['sk-SK'] = $.fn.bootstrapTable.locales['sk'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Skopírovať riadky';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Vytlačiť';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Prosím čakajte';
 	  },
@@ -4344,16 +5058,16 @@
 	    return "Zobrazen\xE1 ".concat(pageFrom, ". - ").concat(pageTo, ". polo\u017Eka z celkov\xFDch ").concat(totalRows);
 	  },
 	  formatSRPaginationPreText: function formatSRPaginationPreText() {
-	    return 'previous page';
+	    return 'Predchádzajúca strana';
 	  },
 	  formatSRPaginationPageText: function formatSRPaginationPageText(page) {
-	    return "to page ".concat(page);
+	    return "na stranu ".concat(page);
 	  },
 	  formatSRPaginationNextText: function formatSRPaginationNextText() {
-	    return 'next page';
+	    return 'Nasledujúca strana';
 	  },
 	  formatDetailPagination: function formatDetailPagination(totalRows) {
-	    return "Showing ".concat(totalRows, " rows");
+	    return "Zobrazuje sa ".concat(totalRows, " riadkov");
 	  },
 	  formatClearSearch: function formatClearSearch() {
 	    return 'Odstráň filtre';
@@ -4368,10 +5082,10 @@
 	    return 'Skry/Zobraz stránkovanie';
 	  },
 	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
-	    return 'Show pagination';
+	    return 'Zobraziť stránkovanie';
 	  },
 	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
-	    return 'Hide pagination';
+	    return 'Skryť stránkovanie';
 	  },
 	  formatRefresh: function formatRefresh() {
 	    return 'Obnoviť';
@@ -4380,37 +5094,46 @@
 	    return 'Prepni';
 	  },
 	  formatToggleOn: function formatToggleOn() {
-	    return 'Show card view';
+	    return 'Zobraziť kartové zobrazenie';
 	  },
 	  formatToggleOff: function formatToggleOff() {
-	    return 'Hide card view';
+	    return 'skryť kartové zobrazenie';
 	  },
 	  formatColumns: function formatColumns() {
 	    return 'Stĺpce';
 	  },
 	  formatColumnsToggleAll: function formatColumnsToggleAll() {
-	    return 'Toggle all';
+	    return 'Prepnúť všetky';
 	  },
 	  formatFullscreen: function formatFullscreen() {
-	    return 'Fullscreen';
+	    return 'Celá obrazovka';
 	  },
 	  formatAllRows: function formatAllRows() {
 	    return 'Všetky';
 	  },
 	  formatAutoRefresh: function formatAutoRefresh() {
-	    return 'Auto Refresh';
+	    return 'Automatické obnovenie';
 	  },
 	  formatExport: function formatExport() {
 	    return 'Exportuj dáta';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'Ísť';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
-	    return 'Advanced search';
+	    return 'Pokročilé vyhľadávanie';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
-	    return 'Close';
+	    return 'Zatvoriť';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Zobraziť/Skryť tlačidlá';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Skryť tlačidlá';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Zobraziť tlačidlá';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['sk-SK']);
@@ -4420,7 +5143,13 @@
 	* Author: Vladimir Kanazir (vladimir@kanazir.com)
 	*/
 
-	$.fn.bootstrapTable.locales['sr-Cyrl-RS'] = {
+	$.fn.bootstrapTable.locales['sr-Cyrl-RS'] = $.fn.bootstrapTable.locales['sr'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Молим сачекај';
 	  },
@@ -4502,6 +5231,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Затвори';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['sr-Cyrl-RS']);
@@ -4512,6 +5250,12 @@
 	*/
 
 	$.fn.bootstrapTable.locales['sr-Latn-RS'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Molim sačekaj';
 	  },
@@ -4593,6 +5337,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Zatvori';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['sr-Latn-RS']);
@@ -4602,7 +5355,13 @@
 	 * Author: C Bratt <bratt@inix.se>
 	 */
 
-	$.fn.bootstrapTable.locales['sv-SE'] = {
+	$.fn.bootstrapTable.locales['sv-SE'] = $.fn.bootstrapTable.locales['sv'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Laddar, vänligen vänta';
 	  },
@@ -4684,6 +5443,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['sv-SE']);
@@ -4693,7 +5461,13 @@
 	 * Author: Monchai S.<monchais@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['th-TH'] = {
+	$.fn.bootstrapTable.locales['th-TH'] = $.fn.bootstrapTable.locales['th'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'กำลังโหลดข้อมูล, กรุณารอสักครู่';
 	  },
@@ -4775,6 +5549,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['th-TH']);
@@ -4785,7 +5568,13 @@
 	 * Author: Sercan Cakir <srcnckr@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['tr-TR'] = {
+	$.fn.bootstrapTable.locales['tr-TR'] = $.fn.bootstrapTable.locales['tr'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Yükleniyor, lütfen bekleyin';
 	  },
@@ -4867,6 +5656,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['tr-TR']);
@@ -4876,7 +5674,13 @@
 	 * Author: Vitaliy Timchenko <vitaliy.timchenko@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['uk-UA'] = {
+	$.fn.bootstrapTable.locales['uk-UA'] = $.fn.bootstrapTable.locales['uk'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Завантаження, будь ласка, зачекайте';
 	  },
@@ -4958,6 +5762,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['uk-UA']);
@@ -4967,7 +5780,13 @@
 	 * Author: Malik <me@malikrizwan.com>
 	 */
 
-	$.fn.bootstrapTable.locales['ur-PK'] = {
+	$.fn.bootstrapTable.locales['ur-PK'] = $.fn.bootstrapTable.locales['ur'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'براۓ مہربانی انتظار کیجئے';
 	  },
@@ -5049,6 +5868,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['ur-PK']);
@@ -5058,7 +5886,13 @@
 	 * Author: Nabijon Masharipov <mnabijonz@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['uz-Latn-UZ'] = {
+	$.fn.bootstrapTable.locales['uz-Latn-UZ'] = $.fn.bootstrapTable.locales['uz'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Yuklanyapti, iltimos kuting';
 	  },
@@ -5140,6 +5974,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['uz-Latn-UZ']);
@@ -5149,7 +5992,13 @@
 	 * Author: Duc N. PHAM <pngduc@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['vi-VN'] = {
+	$.fn.bootstrapTable.locales['vi-VN'] = $.fn.bootstrapTable.locales['vi'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Đang tải';
 	  },
@@ -5231,6 +6080,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Close';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Hide/Show controls';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Hide controls';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Show controls';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['vi-VN']);
@@ -5240,7 +6098,13 @@
 	 * Author: Zhixin Wen<wenzhixin2010@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['zh-CN'] = {
+	$.fn.bootstrapTable.locales['zh-CN'] = $.fn.bootstrapTable.locales['zh'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return '正在努力地加载数据中，请稍候';
 	  },
@@ -5322,6 +6186,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return '关闭';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return '隐藏/显示过滤控制';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return '隐藏过滤控制';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return '显示过滤控制';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['zh-CN']);
@@ -5332,6 +6205,12 @@
 	 */
 
 	$.fn.bootstrapTable.locales['zh-TW'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Copy Rows';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Print';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return '正在努力地載入資料，請稍候';
 	  },
@@ -5413,6 +6292,15 @@
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return '關閉';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return '隱藏/顯示過濾控制';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return '隱藏過濾控制';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return '顯示過濾控制';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['zh-TW']);

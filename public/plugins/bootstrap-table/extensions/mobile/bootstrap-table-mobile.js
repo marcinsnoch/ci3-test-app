@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1141,7 +1141,7 @@
 	      }
 
 	      if (this.options.minWidth < 100 && this.options.resizable) {
-	        console.info('The minWidth when the resizable extension is active should be greater or equal than 100');
+	        console.warn('The minWidth when the resizable extension is active should be greater or equal than 100');
 	        this.options.minWidth = 100;
 	      }
 
@@ -1221,12 +1221,10 @@
 	        } else if (width > this.options.minWidth && height > this.options.minHeight) {
 	          this.conditionFullView();
 	        }
-	      } else {
-	        if (width <= this.options.minWidth) {
-	          this.conditionCardView();
-	        } else if (width > this.options.minWidth) {
-	          this.conditionFullView();
-	        }
+	      } else if (width <= this.options.minWidth) {
+	        this.conditionCardView();
+	      } else if (width > this.options.minWidth) {
+	        this.conditionFullView();
 	      }
 
 	      this.resetView();

@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -795,6 +795,58 @@
 	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
 	addToUnscopables(FIND);
 
+	var $includes = arrayIncludes.includes;
+
+
+	// `Array.prototype.includes` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.includes
+	_export({ target: 'Array', proto: true }, {
+	  includes: function includes(el /* , fromIndex = 0 */) {
+	    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
+	addToUnscopables('includes');
+
+	var MATCH = wellKnownSymbol('match');
+
+	// `IsRegExp` abstract operation
+	// https://tc39.github.io/ecma262/#sec-isregexp
+	var isRegexp = function (it) {
+	  var isRegExp;
+	  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : classofRaw(it) == 'RegExp');
+	};
+
+	var notARegexp = function (it) {
+	  if (isRegexp(it)) {
+	    throw TypeError("The method doesn't accept regular expressions");
+	  } return it;
+	};
+
+	var MATCH$1 = wellKnownSymbol('match');
+
+	var correctIsRegexpLogic = function (METHOD_NAME) {
+	  var regexp = /./;
+	  try {
+	    '/./'[METHOD_NAME](regexp);
+	  } catch (e) {
+	    try {
+	      regexp[MATCH$1] = false;
+	      return '/./'[METHOD_NAME](regexp);
+	    } catch (f) { /* empty */ }
+	  } return false;
+	};
+
+	// `String.prototype.includes` method
+	// https://tc39.github.io/ecma262/#sec-string.prototype.includes
+	_export({ target: 'String', proto: true, forced: !correctIsRegexpLogic('includes') }, {
+	  includes: function includes(searchString /* , position = 0 */) {
+	    return !!~String(requireObjectCoercible(this))
+	      .indexOf(notARegexp(searchString), arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
 	function _classCallCheck(instance, Constructor) {
 	  if (!(instance instanceof Constructor)) {
 	    throw new TypeError("Cannot call a class as a function");
@@ -897,7 +949,7 @@
 	/**
 	 * @author zhixin wen <wenzhixin2010@gmail.com>
 	 * https://github.com/wenzhixin/bootstrap-table/
-	 * theme: https://github.com/jgthms/bulma/
+	 * theme: https://materializecss.com/
 	 */
 
 	$.extend($.fn.bootstrapTable.defaults, {
@@ -944,7 +996,7 @@
 	      this.constants.classes.input = '';
 	      this.constants.classes.paginationDropdown = '';
 	      this.constants.classes.buttonActive = 'green';
-	      this.constants.html.toolbarDropdown = ['<ul id="toolbar-columns-id" class="dropdown-content">', '</ul>'];
+	      this.constants.html.toolbarDropdown = ['<ul class="dropdown-content">', '</ul>'];
 	      this.constants.html.toolbarDropdownItem = '<li class="dropdown-item-marker"><label>%s</label></li>';
 	      this.constants.html.toolbarDropdownSeparator = '<li class="divider" tabindex="-1"></li>';
 	      this.constants.html.pageDropdown = ['<ul id="pagination-list-id" class="dropdown-content">', '</ul>'];
@@ -967,7 +1019,13 @@
 	    value: function handleToolbar() {
 	      if (this.$toolbar.find('.dropdown-toggle').length) {
 	        this.$toolbar.find('.dropdown-toggle').each(function (i, el) {
-	          $(el).attr('data-target', $(el).next().attr('id')).dropdown({
+	          if (!$(el).next().length) {
+	            return;
+	          }
+
+	          var id = "toolbar-columns-id".concat(i);
+	          $(el).next().attr('id', id);
+	          $(el).attr('data-target', id).dropdown({
 	            alignment: 'right',
 	            constrainWidth: false,
 	            closeOnClick: false
@@ -980,7 +1038,7 @@
 	    value: function initPagination() {
 	      _get(_getPrototypeOf(_class.prototype), "initPagination", this).call(this);
 
-	      if (this.options.pagination && !this.options.onlyInfoPagination) {
+	      if (this.options.pagination && this.paginationParts.includes('pageSize')) {
 	        this.$pagination.find('.dropdown-toggle').attr('data-target', this.$pagination.find('.dropdown-content').attr('id')).dropdown();
 	      }
 	    }

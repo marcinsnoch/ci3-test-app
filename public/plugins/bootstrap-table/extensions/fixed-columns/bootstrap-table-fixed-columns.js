@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1224,6 +1224,14 @@
 
 	      (_get2 = _get(_getPrototypeOf(_class.prototype), "initBody", this)).call.apply(_get2, [this].concat(args));
 
+	      if (this.$fixedColumns && this.$fixedColumns.length) {
+	        this.$fixedColumns.toggle(this.fixedColumnsSupported());
+	      }
+
+	      if (this.$fixedColumnsRight && this.$fixedColumnsRight.length) {
+	        this.$fixedColumnsRight.toggle(this.fixedColumnsSupported());
+	      }
+
 	      if (!this.fixedColumnsSupported()) {
 	        return;
 	      }
@@ -1305,6 +1313,19 @@
 	          updateFixedBody(_this.$fixedHeaderRight, _this.$fixedBodyRight);
 	        }
 	      });
+	    }
+	  }, {
+	    key: "hideLoading",
+	    value: function hideLoading() {
+	      _get(_getPrototypeOf(_class.prototype), "hideLoading", this).call(this);
+
+	      if (this.needFixedColumns && this.options.fixedNumber) {
+	        this.$fixedColumns.find('.fixed-table-loading').hide();
+	      }
+
+	      if (this.needFixedColumns && this.options.fixedRightNumber) {
+	        this.$fixedColumnsRight.find('.fixed-table-loading').hide();
+	      }
 	    }
 	  }, {
 	    key: "initFixedColumnsHeader",
@@ -1492,6 +1513,36 @@
 	          _this4.triggerSearch();
 	        });
 	      }
+	    }
+	  }, {
+	    key: "renderStickyHeader",
+	    value: function renderStickyHeader() {
+	      if (!this.options.stickyHeader) {
+	        return;
+	      }
+
+	      this.$stickyContainer = this.$container.find('.sticky-header-container');
+
+	      _get(_getPrototypeOf(_class.prototype), "renderStickyHeader", this).call(this);
+
+	      if (this.needFixedColumns && this.options.fixedNumber) {
+	        this.$fixedColumns.css('z-index', 101).find('.sticky-header-container').css('right', '').width(this.$fixedColumns.outerWidth());
+	      }
+
+	      if (this.needFixedColumns && this.options.fixedRightNumber) {
+	        var $stickyHeaderContainerRight = this.$fixedColumnsRight.find('.sticky-header-container');
+	        this.$fixedColumnsRight.css('z-index', 101);
+	        $stickyHeaderContainerRight.css('left', '').scrollLeft($stickyHeaderContainerRight.find('.table').outerWidth()).width(this.$fixedColumnsRight.outerWidth());
+	      }
+	    }
+	  }, {
+	    key: "matchPositionX",
+	    value: function matchPositionX() {
+	      if (!this.options.stickyHeader) {
+	        return;
+	      }
+
+	      this.$stickyContainer.eq(0).scrollLeft(this.$tableBody.scrollLeft());
 	    }
 	  }]);
 

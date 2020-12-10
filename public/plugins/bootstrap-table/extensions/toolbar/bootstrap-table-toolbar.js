@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1537,6 +1537,56 @@
 	  }
 	});
 
+	var nativeAssign = Object.assign;
+	var defineProperty$3 = Object.defineProperty;
+
+	// `Object.assign` method
+	// https://tc39.github.io/ecma262/#sec-object.assign
+	var objectAssign = !nativeAssign || fails(function () {
+	  // should have correct order of operations (Edge bug)
+	  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$3({}, 'a', {
+	    enumerable: true,
+	    get: function () {
+	      defineProperty$3(this, 'b', {
+	        value: 3,
+	        enumerable: false
+	      });
+	    }
+	  }), { b: 2 })).b !== 1) return true;
+	  // should work with symbols and should have deterministic property order (V8 bug)
+	  var A = {};
+	  var B = {};
+	  // eslint-disable-next-line no-undef
+	  var symbol = Symbol();
+	  var alphabet = 'abcdefghijklmnopqrst';
+	  A[symbol] = 7;
+	  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
+	  return nativeAssign({}, A)[symbol] != 7 || objectKeys(nativeAssign({}, B)).join('') != alphabet;
+	}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
+	  var T = toObject(target);
+	  var argumentsLength = arguments.length;
+	  var index = 1;
+	  var getOwnPropertySymbols = objectGetOwnPropertySymbols.f;
+	  var propertyIsEnumerable = objectPropertyIsEnumerable.f;
+	  while (argumentsLength > index) {
+	    var S = indexedObject(arguments[index++]);
+	    var keys = getOwnPropertySymbols ? objectKeys(S).concat(getOwnPropertySymbols(S)) : objectKeys(S);
+	    var length = keys.length;
+	    var j = 0;
+	    var key;
+	    while (length > j) {
+	      key = keys[j++];
+	      if (!descriptors || propertyIsEnumerable.call(S, key)) T[key] = S[key];
+	    }
+	  } return T;
+	} : nativeAssign;
+
+	// `Object.assign` method
+	// https://tc39.github.io/ecma262/#sec-object.assign
+	_export({ target: 'Object', stat: true, forced: Object.assign !== objectAssign }, {
+	  assign: objectAssign
+	});
+
 	var propertyIsEnumerable = objectPropertyIsEnumerable.f;
 
 	// `Object.{ entries, values }` methods implementation
@@ -2211,8 +2261,24 @@
 	  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
 	}
 
+	function _toConsumableArray(arr) {
+	  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+	}
+
+	function _arrayWithoutHoles(arr) {
+	  if (Array.isArray(arr)) {
+	    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+	    return arr2;
+	  }
+	}
+
 	function _arrayWithHoles(arr) {
 	  if (Array.isArray(arr)) return arr;
+	}
+
+	function _iterableToArray(iter) {
+	  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
 	}
 
 	function _iterableToArrayLimit(arr, i) {
@@ -2245,6 +2311,10 @@
 	  return _arr;
 	}
 
+	function _nonIterableSpread() {
+	  throw new TypeError("Invalid attempt to spread non-iterable instance");
+	}
+
 	function _nonIterableRest() {
 	  throw new TypeError("Invalid attempt to destructure non-iterable instance");
 	}
@@ -2258,7 +2328,7 @@
 	 */
 
 	var Utils = $.fn.bootstrapTable.utils;
-	var bootstrap = {
+	var theme = {
 	  bootstrap3: {
 	    icons: {
 	      advancedSearchIcon: 'glyphicon-chevron-down'
@@ -2272,7 +2342,15 @@
 	      advancedSearchIcon: 'fa-chevron-down'
 	    },
 	    html: {
-	      modal: "\n        <div id=\"avdSearchModal_%s\"  class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"mySmallModalLabel\" aria-hidden=\"true\">\n          <div class=\"modal-dialog modal-xs\">\n            <div class=\"modal-content\">\n              <div class=\"modal-header\">\n                <h4 class=\"modal-title\">%s</h4>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                  <span aria-hidden=\"true\">&times;</span>\n                </button>\n              </div>\n              <div class=\"modal-body modal-body-custom\">\n                <div class=\"container-fluid\" id=\"avdSearchModalContent_%s\"\n                  style=\"padding-right: 0px; padding-left: 0px;\" >\n                </div>\n              </div>\n              <div class=\"modal-footer\">\n                <button type=\"button\" id=\"btnCloseAvd_%s\" class=\"btn btn-%s\">%s</button>\n              </div>\n            </div>\n          </div>\n        </div>\n      "
+	      modal: "\n        <div id=\"avdSearchModal_%s\"  class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"mySmallModalLabel\" aria-hidden=\"true\">\n          <div class=\"modal-dialog modal-xs\">\n            <div class=\"modal-content\">\n              <div class=\"modal-header\">\n                <h4 class=\"modal-title\">%s</h4>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                  <span aria-hidden=\"true\">&times;</span>\n                </button>\n              </div>\n              <div class=\"modal-body modal-body-custom\">\n                <div class=\"container-fluid\" id=\"avdSearchModalContent_%s\"\n                  style=\"padding-right: 0; padding-left: 0;\" >\n                </div>\n              </div>\n              <div class=\"modal-footer\">\n                <button type=\"button\" id=\"btnCloseAvd_%s\" class=\"btn btn-%s\">%s</button>\n              </div>\n            </div>\n          </div>\n        </div>\n      "
+	    }
+	  },
+	  bootstrap5: {
+	    icons: {
+	      advancedSearchIcon: 'fa-chevron-down'
+	    },
+	    html: {
+	      modal: "\n        <div id=\"avdSearchModal_%s\"  class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"mySmallModalLabel\" aria-hidden=\"true\">\n          <div class=\"modal-dialog modal-xs\">\n            <div class=\"modal-content\">\n              <div class=\"modal-header\">\n                <h4 class=\"modal-title\">%s</h4>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                  <span aria-hidden=\"true\">&times;</span>\n                </button>\n              </div>\n              <div class=\"modal-body modal-body-custom\">\n                <div class=\"container-fluid\" id=\"avdSearchModalContent_%s\"\n                  style=\"padding-right: 0; padding-left: 0;\" >\n                </div>\n              </div>\n              <div class=\"modal-footer\">\n                <button type=\"button\" id=\"btnCloseAvd_%s\" class=\"btn btn-%s\">%s</button>\n              </div>\n            </div>\n          </div>\n        </div>\n      "
 	    }
 	  },
 	  bulma: {
@@ -2288,7 +2366,7 @@
 	      advancedSearchIcon: 'fa-chevron-down'
 	    },
 	    html: {
-	      modal: "\n        <div class=\"reveal\" id=\"avdSearchModal_%s\" data-reveal>\n          <h1>%s</h1>\n          <div id=\"avdSearchModalContent_%s\">\n          \n          </div>\n          <button class=\"close-button\" data-close aria-label=\"Close modal\" type=\"button\">\n            <span aria-hidden=\"true\">&times;</span>\n          </button>\n          \n          <button id=\"btnCloseAvd_%s\" class=\"%s\" type=\"button\">%s</button>\n        </div>\n      "
+	      modal: "\n        <div class=\"reveal\" id=\"avdSearchModal_%s\" data-reveal>\n          <h1>%s</h1>\n          <div id=\"avdSearchModalContent_%s\">\n\n          </div>\n          <button class=\"close-button\" data-close aria-label=\"Close modal\" type=\"button\">\n            <span aria-hidden=\"true\">&times;</span>\n          </button>\n\n          <button id=\"btnCloseAvd_%s\" class=\"%s\" type=\"button\">%s</button>\n        </div>\n      "
 	    }
 	  },
 	  materialize: {
@@ -2296,7 +2374,7 @@
 	      advancedSearchIcon: 'expand_more'
 	    },
 	    html: {
-	      modal: "\n        <div id=\"avdSearchModal_%s\" class=\"modal\">\n          <div class=\"modal-content\">\n            <h4>%s</h4>\n            <div id=\"avdSearchModalContent_%s\">\n            \n            </div>\n          </div>\n          <div class=\"modal-footer\">\n            <a href=\"javascript:void(0)\"\" id=\"btnCloseAvd_%s\" class=\"modal-close waves-effect waves-green btn-flat %s\">%s</a>\n          </div>\n        </div>\n      "
+	      modal: "\n        <div id=\"avdSearchModal_%s\" class=\"modal\">\n          <div class=\"modal-content\">\n            <h4>%s</h4>\n            <div id=\"avdSearchModalContent_%s\">\n\n            </div>\n          </div>\n          <div class=\"modal-footer\">\n            <a href=\"javascript:void(0)\"\" id=\"btnCloseAvd_%s\" class=\"modal-close waves-effect waves-green btn-flat %s\">%s</a>\n          </div>\n        </div>\n      "
 	    }
 	  },
 	  semantic: {
@@ -2313,12 +2391,13 @@
 	  idForm: 'advancedSearch',
 	  actionForm: '',
 	  idTable: undefined,
+	  // eslint-disable-next-line no-unused-vars
 	  onColumnAdvancedSearch: function onColumnAdvancedSearch(field, text) {
 	    return false;
 	  }
 	});
 	$.extend($.fn.bootstrapTable.defaults.icons, {
-	  advancedSearchIcon: bootstrap.icons.advancedSearchIcon
+	  advancedSearchIcon: theme.icons.advancedSearchIcon
 	});
 	$.extend($.fn.bootstrapTable.Constructor.EVENTS, {
 	  'column-advanced-search.bs.table': 'onColumnAdvancedSearch'
@@ -2347,51 +2426,54 @@
 	  _createClass(_class, [{
 	    key: "initToolbar",
 	    value: function initToolbar() {
-	      var _this = this;
-
 	      var o = this.options;
 	      this.showToolbar = this.showToolbar || o.search && o.advancedSearch && o.idTable;
 
-	      _get(_getPrototypeOf(_class.prototype), "initToolbar", this).call(this);
-
-	      if (!o.search || !o.advancedSearch || !o.idTable) {
-	        return;
+	      if (o.search && o.advancedSearch && o.idTable) {
+	        this.buttons = Object.assign(this.buttons, {
+	          advancedSearch: {
+	            text: this.options.formatAdvancedSearch(),
+	            icon: this.options.icons.advancedSearchIcon,
+	            event: this.showAvdSearch,
+	            attributes: {
+	              'aria-label': this.options.formatAdvancedSearch(),
+	              title: this.options.formatAdvancedSearch()
+	            }
+	          }
+	        });
 	      }
 
-	      this.$toolbar.find('>.columns').append("\n      <button class=\"".concat(this.constants.buttonsClass, " \"\n        type=\"button\"\n        name=\"advancedSearch\"\n        aria-label=\"advanced search\"\n        title=\"").concat(o.formatAdvancedSearch(), "\">\n        ").concat(this.options.showButtonIcons ? Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.advancedSearchIcon) : '', "\n        ").concat(this.options.showButtonText ? this.options.formatAdvancedSearch() : '', "\n      </button>\n    "));
-	      this.$toolbar.find('button[name="advancedSearch"]').off('click').on('click', function () {
-	        return _this.showAvdSearch();
-	      });
+	      _get(_getPrototypeOf(_class.prototype), "initToolbar", this).call(this);
 	    }
 	  }, {
 	    key: "showAvdSearch",
 	    value: function showAvdSearch() {
-	      var _this2 = this;
+	      var _this = this;
 
 	      var o = this.options;
-	      var modalSelector = '#avdSearchModal_' + o.idTable;
+	      var modalSelector = "#avdSearchModal_".concat(o.idTable);
 
 	      if ($(modalSelector).length <= 0) {
-	        $('body').append(Utils.sprintf(bootstrap.html.modal, o.idTable, o.formatAdvancedSearch(), o.idTable, o.idTable, o.buttonsClass, o.formatAdvancedCloseButton()));
+	        $('body').append(Utils.sprintf(theme.html.modal, o.idTable, o.formatAdvancedSearch(), o.idTable, o.idTable, o.buttonsClass, o.formatAdvancedCloseButton()));
 	        var timeoutId = 0;
 	        $("#avdSearchModalContent_".concat(o.idTable)).append(this.createFormAvd().join(''));
 	        $("#".concat(o.idForm)).off('keyup blur', 'input').on('keyup blur', 'input', function (e) {
 	          if (o.sidePagination === 'server') {
-	            _this2.onColumnAdvancedSearch(e);
+	            _this.onColumnAdvancedSearch(e);
 	          } else {
 	            clearTimeout(timeoutId);
 	            timeoutId = setTimeout(function () {
-	              _this2.onColumnAdvancedSearch(e);
+	              _this.onColumnAdvancedSearch(e);
 	            }, o.searchTimeOut);
 	          }
 	        });
 	        $("#btnCloseAvd_".concat(o.idTable)).click(function () {
-	          return _this2.hideModal();
+	          return _this.hideModal();
 	        });
 
 	        if ($.fn.bootstrapTable.theme === 'bulma') {
 	          $(modalSelector).find('.delete').off('click').on('click', function () {
-	            return _this2.hideModal();
+	            return _this.hideModal();
 	          });
 	        }
 
@@ -2403,10 +2485,17 @@
 	  }, {
 	    key: "showModal",
 	    value: function showModal() {
-	      var modalSelector = '#avdSearchModal_' + this.options.idTable;
+	      var modalSelector = "#avdSearchModal_".concat(this.options.idTable);
 
 	      if ($.inArray($.fn.bootstrapTable.theme, ['bootstrap3', 'bootstrap4']) !== -1) {
 	        $(modalSelector).modal();
+	      } else if ($.fn.bootstrapTable.theme === 'bootstrap5') {
+	        if (!this.toolbarModal) {
+	          //   eslint-disable-next-line no-undef
+	          this.toolbarModal = new bootstrap.Modal(document.getElementById("avdSearchModal_".concat(this.options.idTable)), {});
+	        }
+
+	        this.toolbarModal.show();
 	      } else if ($.fn.bootstrapTable.theme === 'bulma') {
 	        $(modalSelector).toggleClass('is-active');
 	      } else if ($.fn.bootstrapTable.theme === 'foundation') {
@@ -2427,10 +2516,12 @@
 	    key: "hideModal",
 	    value: function hideModal() {
 	      var $closeModalButton = $("#avdSearchModal_".concat(this.options.idTable));
-	      var modalSelector = '#avdSearchModal_' + this.options.idTable;
+	      var modalSelector = "#avdSearchModal_".concat(this.options.idTable);
 
 	      if ($.inArray($.fn.bootstrapTable.theme, ['bootstrap3', 'bootstrap4']) !== -1) {
 	        $closeModalButton.modal('hide');
+	      } else if ($.fn.bootstrapTable.theme === 'bootstrap5') {
+	        this.toolbarModal.hide();
 	      } else if ($.fn.bootstrapTable.theme === 'bulma') {
 	        $('html').toggleClass('is-clipped');
 	        $(modalSelector).toggleClass('is-active');
@@ -2486,7 +2577,7 @@
 	  }, {
 	    key: "initSearch",
 	    value: function initSearch() {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      _get(_getPrototypeOf(_class.prototype), "initSearch", this).call(this);
 
@@ -2504,9 +2595,9 @@
 	          var fval = v.toLowerCase();
 	          var value = item[key];
 
-	          var index = _this3.header.fields.indexOf(key);
+	          var index = _this2.header.fields.indexOf(key);
 
-	          value = Utils.calculateObjectValue(_this3.header, _this3.header.formatters[index], [value, item, i], value);
+	          value = Utils.calculateObjectValue(_this2.header, _this2.header.formatters[index], [value, item, i], value);
 
 	          if (!(index !== -1 && (typeof value === 'string' || typeof value === 'number') && "".concat(value).toLowerCase().includes(fval))) {
 	            return false;
@@ -2515,6 +2606,7 @@
 
 	        return true;
 	      }) : this.data;
+	      this.unsortedData = _toConsumableArray(this.data);
 	    }
 	  }, {
 	    key: "onColumnAdvancedSearch",

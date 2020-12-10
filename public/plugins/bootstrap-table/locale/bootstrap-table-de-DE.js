@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -673,7 +673,13 @@
 	* Author: Paul Mohr - Sopamo<p.mohr@sopamo.de>
 	*/
 
-	$.fn.bootstrapTable.locales['de-DE'] = {
+	$.fn.bootstrapTable.locales['de-DE'] = $.fn.bootstrapTable.locales['de'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Zeilen kopieren';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Drucken';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Lade, bitte warten';
 	  },
@@ -748,13 +754,22 @@
 	    return 'Datenexport';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'Springen';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
 	    return 'Erweiterte Suche';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
 	    return 'Schließen';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Verstecke/Zeige Filter';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Verstecke Filter';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Zeige Filter';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['de-DE']);

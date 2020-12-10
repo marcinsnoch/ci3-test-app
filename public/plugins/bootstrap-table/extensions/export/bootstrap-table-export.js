@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1539,6 +1539,56 @@
 	  }
 	});
 
+	var nativeAssign = Object.assign;
+	var defineProperty$3 = Object.defineProperty;
+
+	// `Object.assign` method
+	// https://tc39.github.io/ecma262/#sec-object.assign
+	var objectAssign = !nativeAssign || fails(function () {
+	  // should have correct order of operations (Edge bug)
+	  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$3({}, 'a', {
+	    enumerable: true,
+	    get: function () {
+	      defineProperty$3(this, 'b', {
+	        value: 3,
+	        enumerable: false
+	      });
+	    }
+	  }), { b: 2 })).b !== 1) return true;
+	  // should work with symbols and should have deterministic property order (V8 bug)
+	  var A = {};
+	  var B = {};
+	  // eslint-disable-next-line no-undef
+	  var symbol = Symbol();
+	  var alphabet = 'abcdefghijklmnopqrst';
+	  A[symbol] = 7;
+	  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
+	  return nativeAssign({}, A)[symbol] != 7 || objectKeys(nativeAssign({}, B)).join('') != alphabet;
+	}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
+	  var T = toObject(target);
+	  var argumentsLength = arguments.length;
+	  var index = 1;
+	  var getOwnPropertySymbols = objectGetOwnPropertySymbols.f;
+	  var propertyIsEnumerable = objectPropertyIsEnumerable.f;
+	  while (argumentsLength > index) {
+	    var S = indexedObject(arguments[index++]);
+	    var keys = getOwnPropertySymbols ? objectKeys(S).concat(getOwnPropertySymbols(S)) : objectKeys(S);
+	    var length = keys.length;
+	    var j = 0;
+	    var key;
+	    while (length > j) {
+	      key = keys[j++];
+	      if (!descriptors || propertyIsEnumerable.call(S, key)) T[key] = S[key];
+	    }
+	  } return T;
+	} : nativeAssign;
+
+	// `Object.assign` method
+	// https://tc39.github.io/ecma262/#sec-object.assign
+	_export({ target: 'Object', stat: true, forced: Object.assign !== objectAssign }, {
+	  assign: objectAssign
+	});
+
 	var TO_STRING_TAG$1 = wellKnownSymbol('toStringTag');
 	var test = {};
 
@@ -2385,12 +2435,14 @@
 	  exportFooter: false
 	});
 	$.extend($.fn.bootstrapTable.columnDefaults, {
-	  forceExport: false
+	  forceExport: false,
+	  forceHide: false
 	});
 	$.extend($.fn.bootstrapTable.defaults.icons, {
 	  export: {
 	    bootstrap3: 'glyphicon-export icon-share',
-	    materialize: 'file_download'
+	    materialize: 'file_download',
+	    'bootstrap-table': 'icon-download'
 	  }[$.fn.bootstrapTable.theme] || 'fa-download'
 	});
 	$.extend($.fn.bootstrapTable.locales, {
@@ -2401,6 +2453,7 @@
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales);
 	$.fn.bootstrapTable.methods.push('exportTable');
 	$.extend($.fn.bootstrapTable.defaults, {
+	  // eslint-disable-next-line no-unused-vars
 	  onExportSaved: function onExportSaved(exportedRows) {
 	    return false;
 	  }
@@ -2427,7 +2480,30 @@
 	          _this = this;
 
 	      var o = this.options;
+	      var exportTypes = o.exportTypes;
 	      this.showToolbar = this.showToolbar || o.showExport;
+
+	      if (this.options.showExport) {
+	        if (typeof exportTypes === 'string') {
+	          var types = exportTypes.slice(1, -1).replace(/ /g, '').split(',');
+	          exportTypes = types.map(function (t) {
+	            return t.slice(1, -1);
+	          });
+	        }
+
+	        this.$export = this.$toolbar.find('>.columns div.export');
+
+	        if (this.$export.length) {
+	          this.updateExportButton();
+	          return;
+	        }
+
+	        this.buttons = Object.assign(this.buttons, {
+	          export: {
+	            html: exportTypes.length === 1 ? "\n            <div class=\"export ".concat(this.constants.classes.buttonsDropdown, "\"\n            data-type=\"").concat(exportTypes[0], "\">\n            <button class=\"").concat(this.constants.buttonsClass, "\"\n            aria-label=\"Export\"\n            type=\"button\"\n            title=\"").concat(o.formatExport(), "\">\n            ").concat(o.showButtonIcons ? Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.export) : '', "\n            ").concat(o.showButtonText ? o.formatExport() : '', "\n            </button>\n            </div>\n          ") : "\n            <div class=\"export ".concat(this.constants.classes.buttonsDropdown, "\">\n            <button class=\"").concat(this.constants.buttonsClass, " dropdown-toggle\"\n            aria-label=\"Export\"\n            data-toggle=\"dropdown\"\n            type=\"button\"\n            title=\"").concat(o.formatExport(), "\">\n            ").concat(o.showButtonIcons ? Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.export) : '', "\n            ").concat(o.showButtonText ? o.formatExport() : '', "\n            ").concat(this.constants.html.dropdownCaret, "\n            </button>\n            </div>\n          ")
+	          }
+	        });
+	      }
 
 	      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
 	        args[_key] = arguments[_key];
@@ -2435,29 +2511,13 @@
 
 	      (_get2 = _get(_getPrototypeOf(_class.prototype), "initToolbar", this)).call.apply(_get2, [this].concat(args));
 
+	      this.$export = this.$toolbar.find('>.columns div.export');
+
 	      if (!this.options.showExport) {
 	        return;
 	      }
 
-	      var $btnGroup = this.$toolbar.find('>.columns');
-	      this.$export = $btnGroup.find('div.export');
-
-	      if (this.$export.length) {
-	        this.updateExportButton();
-	        return;
-	      }
-
 	      var $menu = $(this.constants.html.toolbarDropdown.join(''));
-	      var exportTypes = o.exportTypes;
-
-	      if (typeof exportTypes === 'string') {
-	        var types = exportTypes.slice(1, -1).replace(/ /g, '').split(',');
-	        exportTypes = types.map(function (t) {
-	          return t.slice(1, -1);
-	        });
-	      }
-
-	      this.$export = $(exportTypes.length === 1 ? "\n      <div class=\"export ".concat(this.constants.classes.buttonsDropdown, "\"\n      data-type=\"").concat(exportTypes[0], "\">\n      <button class=\"").concat(this.constants.buttonsClass, "\"\n      aria-label=\"Export\"\n      type=\"button\"\n      title=\"").concat(o.formatExport(), "\">\n      ").concat(o.showButtonIcons ? Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.export) : '', "\n      ").concat(o.showButtonText ? o.formatExport() : '', "\n      </button>\n      </div>\n    ") : "\n      <div class=\"export ".concat(this.constants.classes.buttonsDropdown, "\">\n      <button class=\"").concat(this.constants.buttonsClass, " dropdown-toggle\"\n      aria-label=\"Export\"\n      data-toggle=\"dropdown\"\n      type=\"button\"\n      title=\"").concat(o.formatExport(), "\">\n      ").concat(o.showButtonIcons ? Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.export) : '', "\n      ").concat(o.showButtonText ? o.formatExport() : '', "\n      ").concat(this.constants.html.dropdownCaret, "\n      </button>\n      </div>\n    ")).appendTo($btnGroup);
 	      var $items = this.$export;
 
 	      if (exportTypes.length > 1) {
@@ -2519,12 +2579,6 @@
 	        return;
 	      }
 
-	      if ($.fn.bootstrapTable.theme === 'foundation') {
-	        this.$export.find('.dropdown-pane').attr('id', 'toolbar-export-id');
-	      } else if ($.fn.bootstrapTable.theme === 'materialize') {
-	        this.$export.find('.dropdown-content').attr('id', 'toolbar-export-id');
-	      }
-
 	      if (_get(_getPrototypeOf(_class.prototype), "handleToolbar", this)) {
 	        _get(_getPrototypeOf(_class.prototype), "handleToolbar", this).call(this);
 	      }
@@ -2546,6 +2600,12 @@
 	        if (isCardView) {
 	          _this2.toggleView();
 	        }
+
+	        _this2.columns.forEach(function (row) {
+	          if (row.forceHide) {
+	            _this2.hideColumn(row.field);
+	          }
+	        });
 
 	        var data = _this2.getData();
 
@@ -2601,6 +2661,13 @@
 	                _this2.hideColumn(row.field);
 	              }
 	            });
+
+	            _this2.columns.forEach(function (row) {
+	              if (row.forceHide) {
+	                _this2.showColumn(row.field);
+	              }
+	            });
+
 	            if (callback) callback();
 	          }
 	        }, o.exportOptions, options));
@@ -2610,11 +2677,13 @@
 	        var eventName = o.sidePagination === 'server' ? 'post-body.bs.table' : 'page-change.bs.table';
 	        var virtualScroll = this.options.virtualScroll;
 	        this.$el.one(eventName, function () {
-	          doExport(function () {
-	            _this2.options.virtualScroll = virtualScroll;
+	          setTimeout(function () {
+	            doExport(function () {
+	              _this2.options.virtualScroll = virtualScroll;
 
-	            _this2.togglePagination();
-	          });
+	              _this2.togglePagination();
+	            });
+	          }, 0);
 	        });
 	        this.options.virtualScroll = false;
 	        this.togglePagination();
@@ -2622,6 +2691,7 @@
 	      } else if (o.exportDataType === 'selected') {
 	        var data = this.getData();
 	        var selectedData = this.getSelections();
+	        var pagination = o.pagination;
 
 	        if (!selectedData.length) {
 	          return;
@@ -2637,7 +2707,16 @@
 	        }
 
 	        this.load(selectedData);
+
+	        if (pagination) {
+	          this.togglePagination();
+	        }
+
 	        doExport(function () {
+	          if (pagination) {
+	            _this2.togglePagination();
+	          }
+
 	          _this2.load(data);
 	        });
 	        this.trigger('export-saved', selectedData);

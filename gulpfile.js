@@ -25,17 +25,20 @@ function images() {
                 imagemin.gifsicle({
                     interlaced: true
                 }),
-                imagemin.jpegtran({
+                imagemin.mozjpeg({
+                    quality: 75,
                     progressive: true
                 }),
                 imagemin.optipng({
                     optimizationLevel: 5
                 }),
                 imagemin.svgo({
-                    plugins: [{
-                        removeViewBox: false,
-                        collapseGroups: true
-                    }]
+                    plugins: [
+                        {
+                            removeViewBox: false,
+                            collapseGroups: true
+                        }
+                    ]
                 })
             ])
         )

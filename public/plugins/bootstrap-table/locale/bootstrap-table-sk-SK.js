@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -673,7 +673,13 @@
 	 * Author: Jozef Dúc<jozef.d13@gmail.com>
 	 */
 
-	$.fn.bootstrapTable.locales['sk-SK'] = {
+	$.fn.bootstrapTable.locales['sk-SK'] = $.fn.bootstrapTable.locales['sk'] = {
+	  formatCopyRows: function formatCopyRows() {
+	    return 'Skopírovať riadky';
+	  },
+	  formatPrint: function formatPrint() {
+	    return 'Vytlačiť';
+	  },
 	  formatLoadingMessage: function formatLoadingMessage() {
 	    return 'Prosím čakajte';
 	  },
@@ -688,16 +694,16 @@
 	    return "Zobrazen\xE1 ".concat(pageFrom, ". - ").concat(pageTo, ". polo\u017Eka z celkov\xFDch ").concat(totalRows);
 	  },
 	  formatSRPaginationPreText: function formatSRPaginationPreText() {
-	    return 'previous page';
+	    return 'Predchádzajúca strana';
 	  },
 	  formatSRPaginationPageText: function formatSRPaginationPageText(page) {
-	    return "to page ".concat(page);
+	    return "na stranu ".concat(page);
 	  },
 	  formatSRPaginationNextText: function formatSRPaginationNextText() {
-	    return 'next page';
+	    return 'Nasledujúca strana';
 	  },
 	  formatDetailPagination: function formatDetailPagination(totalRows) {
-	    return "Showing ".concat(totalRows, " rows");
+	    return "Zobrazuje sa ".concat(totalRows, " riadkov");
 	  },
 	  formatClearSearch: function formatClearSearch() {
 	    return 'Odstráň filtre';
@@ -712,10 +718,10 @@
 	    return 'Skry/Zobraz stránkovanie';
 	  },
 	  formatPaginationSwitchDown: function formatPaginationSwitchDown() {
-	    return 'Show pagination';
+	    return 'Zobraziť stránkovanie';
 	  },
 	  formatPaginationSwitchUp: function formatPaginationSwitchUp() {
-	    return 'Hide pagination';
+	    return 'Skryť stránkovanie';
 	  },
 	  formatRefresh: function formatRefresh() {
 	    return 'Obnoviť';
@@ -724,37 +730,46 @@
 	    return 'Prepni';
 	  },
 	  formatToggleOn: function formatToggleOn() {
-	    return 'Show card view';
+	    return 'Zobraziť kartové zobrazenie';
 	  },
 	  formatToggleOff: function formatToggleOff() {
-	    return 'Hide card view';
+	    return 'skryť kartové zobrazenie';
 	  },
 	  formatColumns: function formatColumns() {
 	    return 'Stĺpce';
 	  },
 	  formatColumnsToggleAll: function formatColumnsToggleAll() {
-	    return 'Toggle all';
+	    return 'Prepnúť všetky';
 	  },
 	  formatFullscreen: function formatFullscreen() {
-	    return 'Fullscreen';
+	    return 'Celá obrazovka';
 	  },
 	  formatAllRows: function formatAllRows() {
 	    return 'Všetky';
 	  },
 	  formatAutoRefresh: function formatAutoRefresh() {
-	    return 'Auto Refresh';
+	    return 'Automatické obnovenie';
 	  },
 	  formatExport: function formatExport() {
 	    return 'Exportuj dáta';
 	  },
 	  formatJumpTo: function formatJumpTo() {
-	    return 'GO';
+	    return 'Ísť';
 	  },
 	  formatAdvancedSearch: function formatAdvancedSearch() {
-	    return 'Advanced search';
+	    return 'Pokročilé vyhľadávanie';
 	  },
 	  formatAdvancedCloseButton: function formatAdvancedCloseButton() {
-	    return 'Close';
+	    return 'Zatvoriť';
+	  },
+	  formatFilterControlSwitch: function formatFilterControlSwitch() {
+	    return 'Zobraziť/Skryť tlačidlá';
+	  },
+	  formatFilterControlSwitchHide: function formatFilterControlSwitchHide() {
+	    return 'Skryť tlačidlá';
+	  },
+	  formatFilterControlSwitchShow: function formatFilterControlSwitchShow() {
+	    return 'Zobraziť tlačidlá';
 	  }
 	};
 	$.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['sk-SK']);

@@ -4,7 +4,7 @@
 	(global = global || self, factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
-	$ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+	$ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -795,6 +795,58 @@
 	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
 	addToUnscopables(FIND);
 
+	var $includes = arrayIncludes.includes;
+
+
+	// `Array.prototype.includes` method
+	// https://tc39.github.io/ecma262/#sec-array.prototype.includes
+	_export({ target: 'Array', proto: true }, {
+	  includes: function includes(el /* , fromIndex = 0 */) {
+	    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+	// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
+	addToUnscopables('includes');
+
+	var MATCH = wellKnownSymbol('match');
+
+	// `IsRegExp` abstract operation
+	// https://tc39.github.io/ecma262/#sec-isregexp
+	var isRegexp = function (it) {
+	  var isRegExp;
+	  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : classofRaw(it) == 'RegExp');
+	};
+
+	var notARegexp = function (it) {
+	  if (isRegexp(it)) {
+	    throw TypeError("The method doesn't accept regular expressions");
+	  } return it;
+	};
+
+	var MATCH$1 = wellKnownSymbol('match');
+
+	var correctIsRegexpLogic = function (METHOD_NAME) {
+	  var regexp = /./;
+	  try {
+	    '/./'[METHOD_NAME](regexp);
+	  } catch (e) {
+	    try {
+	      regexp[MATCH$1] = false;
+	      return '/./'[METHOD_NAME](regexp);
+	    } catch (f) { /* empty */ }
+	  } return false;
+	};
+
+	// `String.prototype.includes` method
+	// https://tc39.github.io/ecma262/#sec-string.prototype.includes
+	_export({ target: 'String', proto: true, forced: !correctIsRegexpLogic('includes') }, {
+	  includes: function includes(searchString /* , position = 0 */) {
+	    return !!~String(requireObjectCoercible(this))
+	      .indexOf(notARegexp(searchString), arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
 	function _classCallCheck(instance, Constructor) {
 	  if (!(instance instanceof Constructor)) {
 	    throw new TypeError("Cannot call a class as a function");
@@ -939,7 +991,7 @@
 	      this.constants.html.dropdownCaret = '<span class="icon is-small"><i class="fas fa-angle-down" aria-hidden="true"></i></span>';
 	      this.constants.html.pagination = ['<ul class="pagination%s">', '</ul>'];
 	      this.constants.html.paginationItem = '<li><a class="page-item pagination-link%s" aria-label="%s" href="#">%s</a></li>';
-	      this.constants.html.searchInput = '<p class="control"><input class="%s input-%s" type="text" placeholder="%s"></p>';
+	      this.constants.html.searchInput = '<p class="control"><input class="%s input-%s" type="search" placeholder="%s"></p>';
 	      this.constants.html.inputGroup = '<div class="field has-addons has-addons-right">%s%s</div>';
 	      this.constants.html.searchButton = '<p class="control"><button class="%s" type="button" name="search" title="%s">%s %s</button></p>';
 	      this.constants.html.searchClearButton = '<p class="control"><button class="%s" type="button" name="clearSearch" title="%s">%s %s</button></p>';
@@ -963,7 +1015,7 @@
 	    value: function initPagination() {
 	      _get(_getPrototypeOf(_class.prototype), "initPagination", this).call(this);
 
-	      if (this.options.pagination && !this.options.onlyInfoPagination) {
+	      if (this.options.pagination && this.paginationParts.includes('pageSize')) {
 	        this._initDropdown();
 	      }
 	    }
