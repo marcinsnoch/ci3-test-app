@@ -152,7 +152,7 @@ class Auth extends MY_Controller
     }
 
     // Private methods
-    
+
     public function _login($user)
     {
         $user_data = [
@@ -184,6 +184,3 @@ class Auth extends MY_Controller
         return true;
     }
 }
-
-// End of file Dashboard.php
-// Location: ./application/controllers/Dashboard.php

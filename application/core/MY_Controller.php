@@ -12,17 +12,6 @@ class MY_Controller extends CI_Controller
 {
 
     /**
-     * A list of models to be autoloaded.
-     */
-    protected $models = [];
-
-    /**
-     * A formatting string for the model autoloading feature.
-     * The percent symbol (%) will be replaced with the model name.
-     */
-    protected $model_string = '%_model';
-
-    /**
      * A list of helpers to be autoloaded.
      */
     protected $helpers = [];
@@ -34,7 +23,7 @@ class MY_Controller extends CI_Controller
 
 
     /**
-     * Initialise the controller, tie into the CodeIgniter superobject
+     * Initialize the controller, tie into the CodeIgniter superobject
      * and try to autoload the models and helpers.
      */
     public function __construct()
@@ -42,28 +31,8 @@ class MY_Controller extends CI_Controller
         parent::__construct();
         $this->load->language('application');
 
-        $this->_load_twig_globals();
-        $this->_load_models();
+        $this->_load_twig_globals(['config', 'session']);
         $this->_load_helpers();
-    }
-
-    /**
-     * Load models based on the $this->models array.
-     */
-    private function _load_models()
-    {
-        foreach ($this->models as $model) {
-            $this->load->model($this->_model_name($model), $model);
-        }
-    }
-
-    /**
-     * Returns the loadable model name based on
-     * the model formatting string.
-     */
-    protected function _model_name($model)
-    {
-        return str_replace('%', $model, $this->model_string);
     }
 
     /**
@@ -79,9 +48,12 @@ class MY_Controller extends CI_Controller
     /**
      * Load Twig globals
      */
-    private function _load_twig_globals()
+    private function _load_twig_globals($defaults = [])
     {
-        foreach ($this->twig_globals as $key => $val) {
+        // $this->twig->addGlobal('config', $this->config);
+        // $this->twig->addGlobal('session', $this->session);
+        $globals = array_merge($defaults, $this->twig_globals);
+        foreach ($globals as $key => $val) {
             if (is_int($key)) {
                 $this->twig->addGlobal($val, $this->{$val});
             } else {
