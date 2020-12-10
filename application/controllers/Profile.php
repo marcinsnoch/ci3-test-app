@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Home extends MY_Controller
+class Profile extends MY_Controller
 {
     public function __construct()
     {
@@ -12,6 +12,7 @@ class Home extends MY_Controller
 
     public function index()
     {
-        $this->twig->display('home/index');
+        $user = UserModel::find($this->session->user_id);
+        $this->twig->display('profile/index', compact('user'));
     }
 }

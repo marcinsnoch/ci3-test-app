@@ -12,7 +12,7 @@
         <link href="{{ base_url('plugins/admin-lte/css/skins/skin-blue.min.css') }}" rel="stylesheet">
         <link href="{{ base_url('plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
         <link href="{{ base_url('css/styles.min.css') }}" rel="stylesheet">
-        <title>{% block title %}{% endblock %}</title>
+        <title>{% block title %}{% endblock %} | {{ config.item('app_name') }}</title>
         {% endblock %}
     </head>
 
@@ -60,7 +60,7 @@
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="{{ site_url('/') }}" class="btn btn-default"><i class="fa fa-user"></i> {{ lang('My_account') }}</a>
+                                            <a href="{{ site_url('/profile') }}" class="btn btn-default"><i class="fa fa-user"></i> {{ lang('Profile') }}</a>
                                         </div>
                                         <div class="pull-right">
                                             <a href="{{ site_url('logout') }}" class="btn btn-default"><i class="fa fa-sign-out"></i> {{ lang('Sign_out') }}</a>
@@ -87,11 +87,11 @@
                         <li><a href="{{ site_url('/') }}"><i class="fa fa-home fa-fw"></i> <span>{{ lang('Home') }}</span></a></li>
                         <li><a href="{{ site_url('/') }}"><i class="fa fa-shopping-basket fa-fw"></i> <span>{{ lang('Products') }}</span></a></li>
                         <li><a href="{{ site_url('/') }}"><i class="fa fa-shopping-cart fa-fw"></i> <span>{{ lang('Orders') }}</span></a></li>
-                        <li class="header">{{ lang('DISTRIBUTION_CENTER') }}</li>
                         <li><a href="{{ site_url('/') }}"><i class="fa fa-truck fa-fw"></i> <span>{{ lang('Deliveries') }}</span></a></li>
                         <li><a href="{{ site_url('/') }}"><i class="fa fa-plane fa-fw"></i> <span>{{ lang('Shipments') }}</span></a></li>
-                        <li class="header">{{ lang('OTHER_MENU') }}</li>
                         <li><a href="{{ site_url('/users') }}"><i class="fa fa-users fa-fw"></i> <span>{{ lang('Users') }}</span></a></li>
+                        <li class="header">{{ lang('OTHER_MENU') }}</li>
+                        <li><a href="{{ site_url('/example') }}"><i class="fa fa-circle fa-fw"></i> <span>Example page</span></a></li>
                     </ul>
                 </section>
             </aside>

@@ -1,14 +1,7 @@
 {% extends "layouts/application.twig" %}
 
 {% block title %}Index{% endblock %}
-{% block head %}
-    {{ parent() }}
-    <link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
-    <link href="{{ base_url('plugins/bootstrap-table/extensions/sticky-header/bootstrap-table-sticky-header.css') }}" rel="stylesheet">
-    <link href="{{ base_url('plugins/eonasdan-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
-    <link href="{{ base_url('plugins/icheck/skins/square/_all.css') }}" rel="stylesheet">
-    <link href="{{ base_url('plugins/ekko-lightbox/ekko-lightbox.css') }}" rel="stylesheet">
-{% endblock %}
+
 {% block content %}
     <section class="content-header">
         <h1>Page title <small>sub title</small></h1>
@@ -45,18 +38,4 @@
             </div>
         </div>
     </section>
-{% endblock %}
-{% block scripts %}
-    {{ parent() }}
-    <script src="{{ base_url('plugins/ekko-lightbox/ekko-lightbox.min.js') }}"></script>
-    <script src="{{ base_url('plugins/bootstrap-3-typeahead/bootstrap3-typeahead.min.js') }}"></script>
-    <script src="{{ base_url('plugins/moment/moment-with-locales.min.js') }}"></script>
-    <script src="{{ base_url('plugins/eonasdan-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
-    <script src="{{ base_url('plugins/bootstrap-table/bootstrap-table-locale-all.min.js') }}"></script>
-    <script src="{{ base_url('plugins/bootstrap-table/extensions/export/bootstrap-table-export.js') }}"></script>
-    <script src="{{ base_url('plugins/bootstrap-table/extensions/cookie/bootstrap-table-cookie.min.js') }}"></script>
-    <script src="{{ base_url('plugins/bootstrap-table/extensions/sticky-header/bootstrap-table-sticky-header.min.js') }}"></script>
-    <script src="{{ base_url('plugins/tableexport.jquery.plugin/tableExport.min.js') }}"></script>
-    <script src="{{ base_url('plugins/icheck/icheck.min.js') }}"></script>
 {% endblock %}

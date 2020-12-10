@@ -53,6 +53,16 @@ class Sendmail
         $body = $this->ci->twig->render('emails/activation', $email_data);
         return $this->sendEmail($user->email, 'Activation email', $body);
     }
+    
+    public function resetPasswordEmail($user)
+    {
+        $email_data = [
+            'body_title' => 'Hi '. $user->full_name . '!',
+            'body_top' => 'Reset Your password!',
+        ];
+        $body = $this->ci->twig->render('emails/activation', $email_data);
+        return $this->sendEmail($user->email, 'Activation email', $body);
+    }
 }
 
 /* End of file Sendmail.php */

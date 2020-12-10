@@ -92,6 +92,7 @@ $autoload['drivers'] = [];
 */
 
 $autoload['helper'] = [
+    'application',
     'dump',
     'form',
     'html',

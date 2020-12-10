@@ -4,15 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Auth extends MY_Controller
 {
-    protected $helpers = [
-        'application'
-    ];
-
-    protected $twig_globals = [
-        'config',
-        'session',
-    ];
-
     public function __construct()
     {
         parent::__construct();
@@ -28,7 +19,7 @@ class Auth extends MY_Controller
             show_404();
         }
         // check token in link
-        $user = User::where('token', $this->input->get('token'))->first();
+        $user = UserModel::where('token', $this->input->get('token'))->first();
         if (!$user) {
             // set flash msg. "error"
             set_alert('danger', 'Some error occurred!');
@@ -53,7 +44,7 @@ class Auth extends MY_Controller
         // check if logged in
         $this->_logged_in();
         if ($this->input->post('login') && $this->form_validation->run('login')) {
-            $user = User::where('email', $this->input->post('email'))->first();
+            $user = UserModel::where('email', $this->input->post('email'))->first();
             // check if user exist
             if (!$user) {
                 set_alert('danger', 'User does not exist!');
@@ -65,7 +56,7 @@ class Auth extends MY_Controller
                 set_alert('danger', 'Your account is not activated. Please check your email.');
                 redirect('/login');
             }
-            // compare input pass with stored user password
+            // compare input password with stored user password
             if (password_verify($this->input->post('password'), $user->password)) {
                 $this->_login($user);
                 redirect('/home');
@@ -105,7 +96,16 @@ class Auth extends MY_Controller
     {
         // display forgot password form
         // get user email and check if exist
-        // exist: send email: link with token
+        if ($this->input->post('send') && $this->form_validation->run('user_email')) {
+            $user = UserModel::where('email', $this->input->post('email'))->first();
+            // exist: send email: link with token
+            $this->load->library('Sendmail');
+            $this->sendmail->resetPasswordEmail($user);
+            // set flash msg. "check your email..."
+            set_alert('success', 'Please check your email inbox.');
+            // redirect to login page
+            redirect('/login');
+        }
         // not exist: display message
         $this->twig->display('auth/password');
     }
@@ -118,10 +118,12 @@ class Auth extends MY_Controller
         // validate the data
         if ($this->input->post('register') && $this->form_validation->run('register_user')) {
             // create account
-            $data = array_from_post(['email', 'full_name']);
-            $data['password'] = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
-            $data['token'] = bin2hex(random_bytes(64));
-            $user = User::create($data);
+            $user = UserModel::create([
+                'email' => $this->input->post('email'),
+                'full_name' => $this->input->post('full_name'),
+                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+                'token' => bin2hex(random_bytes(64))
+            ]);
             if ($user) {
                 // send activation email (link with token)
                 $this->load->library('Sendmail');
@@ -171,13 +173,26 @@ class Auth extends MY_Controller
     }
 
     /**
-     * Check if email has been already used
+     * Check if email exists
      */
     public function _email_exist($email)
     {
-        $user_email = User::where('email', $email)->first();
+        $user_email = UserModel::where('email', $email)->first();
+        if (!$user_email) {
+            $this->form_validation->set_message('_email_exist', 'Email does not exist!');
+            return false;
+        }
+        
+        return true;
+    }
+    /**
+     * Check if email has been already used
+     */
+    public function _email_not_exist($email)
+    {
+        $user_email = UserModel::where('email', $email)->first();
         if ($user_email) {
-            $this->form_validation->set_message('_email_exist', 'This email address is already registered');
+            $this->form_validation->set_message('_email_not_exist', 'This email address is already registered');
             return false;
         }
 
