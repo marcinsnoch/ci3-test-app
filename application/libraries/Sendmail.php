@@ -29,29 +29,29 @@ class Sendmail
         return $this->ci->email->send();
     }
 
-    public function activationEmail(array $user)
+    public function activationEmail($user)
     {
         $email_data = [
-            'body_title' => 'Hi '. $user['full_name'] . '!',
+            'body_title' => 'Hi '. $user->full_name . '!',
             'body_top' => 'Please click the button below, to confirm your registration.',
             'btn' => [
                 'name' => 'Confirm',
-                'link' => site_url('auth/activation?token='.$user['token']),
+                'link' => site_url('auth/activation?token='.$user->token),
             ],
             'body_bottom' => 'Thank you!',
         ];
         $body = $this->ci->twig->render('emails/activation', $email_data);
-        return $this->sendEmail($user['email'], 'Activation email', $body);
+        return $this->sendEmail($user->email, 'Activation email', $body);
     }
 
-    public function confirmEmail(array $user)
+    public function confirmEmail($user)
     {
         $email_data = [
-            'body_title' => 'Hi '. $user['full_name'] . '!',
+            'body_title' => 'Hi '. $user->full_name . '!',
             'body_top' => 'You account is active!',
         ];
         $body = $this->ci->twig->render('emails/activation', $email_data);
-        return $this->sendEmail($user['email'], 'Activation email', $body);
+        return $this->sendEmail($user->email, 'Activation email', $body);
     }
 }
 

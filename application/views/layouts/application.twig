@@ -5,14 +5,14 @@
         {% block head %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
         <link href="{{ base_url('plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ base_url('plugins/admin-lte/css/AdminLTE.min.css') }}" rel="stylesheet">
         <link href="{{ base_url('plugins/admin-lte/css/skins/skin-blue.min.css') }}" rel="stylesheet">
         <link href="{{ base_url('plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
         <link href="{{ base_url('css/styles.min.css') }}" rel="stylesheet">
+        <title>{% block title %}{% endblock %}</title>
         {% endblock %}
     </head>
 
@@ -94,7 +94,7 @@
                         <li><a href="{{ site_url('/') }}"><i class="fa fa-truck fa-fw"></i> <span>{{ lang('Deliveries') }}</span></a></li>
                         <li><a href="{{ site_url('/') }}"><i class="fa fa-plane fa-fw"></i> <span>{{ lang('Shipments') }}</span></a></li>
                         <li class="header">{{ lang('OTHER_MENU') }}</li>
-                        <li><a href="{{ site_url('/') }}"><i class="fa fa-users fa-fw"></i> <span>{{ lang('Users') }}</span></a></li>
+                        <li><a href="{{ site_url('/users') }}"><i class="fa fa-users fa-fw"></i> <span>{{ lang('Users') }}</span></a></li>
                     </ul>
                 </section>
             </aside>

@@ -1,22 +1,19 @@
 <?php
-
-use Twig\Extra\Intl\IntlExtension;
-
-/*
- * Part of CodeIgniter Simple and Secure Twig
- *
- * @author     Kenji Suzuki <https://github.com/kenjis>
- * @license    MIT License
- * @copyright  2015 Kenji Suzuki
- * @link       https://github.com/kenjis/codeigniter-ss-twig
- */
 defined('BASEPATH') or exit('No direct script access allowed');
 
-// If you don't use Composer, uncomment below
 /*
-require_once APPPATH . 'third_party/Twig-1.xx.x/lib/Twig/Autoloader.php';
-Twig_Autoloader::register();
+* Part of CodeIgniter Simple and Secure Twig
+*
+* @author     Kenji Suzuki <https://github.com/kenjis>
+* @license    MIT License
+* @copyright  2015 Kenji Suzuki
+* @link       https://github.com/kenjis/codeigniter-ss-twig
 */
+
+use Twig\Environment;
+use Twig\TwigFunction;
+use Twig\Loader\FilesystemLoader;
+use Twig\Extra\Intl\IntlExtension;
 
 class Twig
 {
@@ -45,7 +42,7 @@ class Twig
     private $functions_safe = [
         'form_open', 'form_close', 'form_error', 'form_hidden', 'set_value',
         'form_open_multipart', 'form_upload', 'form_submit', 'form_dropdown',
-        'set_radio', 'set_select', 'set_checkbox'
+        'set_radio', 'set_select', 'set_checkbox',
     ];
 
     /**
@@ -66,7 +63,7 @@ class Twig
     public function __construct($params = [])
     {
         if (empty($params)) {
-            $CI = & get_instance();
+            $CI = &get_instance();
             $params['twig'] = $CI->config->item('twig') ?? [];
         }
         if (isset($params['twig']['functions'])) {
@@ -116,13 +113,13 @@ class Twig
         }
 
         if ($this->loader === null) {
-            $this->loader = new \Twig_Loader_Filesystem($this->paths);
+            $this->loader = new FilesystemLoader($this->paths);
         }
 
-        $twig = new \Twig_Environment($this->loader, $this->config);
-
+        $twig = new Environment($this->loader, $this->config);
+        
         if ($this->config['debug']) {
-            $twig->addExtension(new \Twig_Extension_Debug());
+            $twig->addExtension(new Twig\Extension\DebugExtension());
         }
         $twig->addExtension(new IntlExtension());
 
@@ -154,7 +151,7 @@ class Twig
      */
     public function display($view, $params = [])
     {
-        $CI = & get_instance();
+        $CI = &get_instance();
         $CI->output->set_output($this->render($view, $params));
     }
 
@@ -187,37 +184,20 @@ class Twig
         // as is functions
         foreach ($this->functions_asis as $function) {
             if (function_exists($function)) {
-                $this->twig->addFunction(
-                    new \Twig_SimpleFunction(
-                        $function,
-                        $function
-                    )
-                );
+                $this->twig->addFunction(new TwigFunction($function, $function));
             }
         }
 
         // safe functions
         foreach ($this->functions_safe as $function) {
             if (function_exists($function)) {
-                $this->twig->addFunction(
-                    new \Twig_SimpleFunction(
-                        $function,
-                        $function,
-                        ['is_safe' => ['html']]
-                    )
-                );
+                $this->twig->addFunction(new TwigFunction($function, $function, ['is_safe' => ['html']]));
             }
         }
 
         // customized functions
         if (function_exists('anchor')) {
-            $this->twig->addFunction(
-                new \Twig_SimpleFunction(
-                    'anchor',
-                    [$this, 'safe_anchor'],
-                    ['is_safe' => ['html']]
-                )
-            );
+            $this->twig->addFunction(new TwigFunction('anchor', [$this, 'safe_anchor'], ['is_safe' => ['html']]));
         }
 
         $this->functions_added = true;

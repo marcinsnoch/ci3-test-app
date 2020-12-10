@@ -360,7 +360,7 @@ $config['sess_expiration'] = 0;
 $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = true;
 $config['sess_time_to_update'] = 300;
-$config['sess_regenerate_destroy'] = false;
+$config['sess_regenerate_destroy'] = true;
 
 /*
 |--------------------------------------------------------------------------
