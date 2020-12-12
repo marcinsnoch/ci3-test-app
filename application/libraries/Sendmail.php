@@ -40,7 +40,7 @@ class Sendmail
             ],
             'body_bottom' => 'Thank you!',
         ];
-        $body = $this->ci->twig->render('emails/activation', $email_data);
+        $body = $this->ci->twig->render('emails/auth', $email_data);
         return $this->sendEmail($user->email, 'Activation email', $body);
     }
 
@@ -50,7 +50,7 @@ class Sendmail
             'body_title' => 'Hi '. $user->full_name . '!',
             'body_top' => 'You account is active!',
         ];
-        $body = $this->ci->twig->render('emails/activation', $email_data);
+        $body = $this->ci->twig->render('emails/auth', $email_data);
         return $this->sendEmail($user->email, 'Activation email', $body);
     }
     
@@ -58,10 +58,15 @@ class Sendmail
     {
         $email_data = [
             'body_title' => 'Hi '. $user->full_name . '!',
-            'body_top' => 'Reset Your password!',
+            'body_top' => 'Please click the button below, to reset Your password.',
+            'btn' => [
+                'name' => 'Reset password',
+                'link' => site_url('recovery-password?token='.$user->token),
+            ],
+            'body_bottom' => 'Thank you!',
         ];
-        $body = $this->ci->twig->render('emails/activation', $email_data);
-        return $this->sendEmail($user->email, 'Activation email', $body);
+        $body = $this->ci->twig->render('emails/auth', $email_data);
+        return $this->sendEmail($user->email, 'Forgot password', $body);
     }
 }
 
