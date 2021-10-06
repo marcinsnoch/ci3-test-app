@@ -49,9 +49,9 @@
                 </div>
                 <div class="row">
                     <div class="col-8">
-                        <div class="icheck-primary">
-                            <input type="checkbox" id="agreeTerms" name="terms" value="agree" {{ set_select('terms', 'agree') }}>
-                            <label for="agreeTerms">
+                        <div class="form-check icheck-primary">
+                            <input type="checkbox" id="agreeTerms" name="terms" value="agree" {{ set_checkbox('terms', 'agree') }} class="form-check-input{{ form_error('terms') ? ' is-invalid'}}">
+                            <label for="agreeTerms" class="form-check-label">
                                 I agree to the <a href="#">terms</a>
                             </label>
                         </div>

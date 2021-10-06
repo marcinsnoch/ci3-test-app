@@ -8,14 +8,15 @@ class Auth extends MY_Controller
     {
         parent::__construct();
     }
-    
+
     /**
-     * Log in in to app
+     * Log in to App
      */
     public function login()
     {
         // check if logged in
         $this->_logged_in();
+        $this->_check_remember_me();
         if ($this->input->post('login') && $this->form_validation->run('login')) {
             $user = UserModel::where('email', $this->input->post('email'))->first();
             // check if user exist
@@ -32,6 +33,7 @@ class Auth extends MY_Controller
             // compare input password with stored user password
             if (password_verify($this->input->post('password'), $user->password)) {
                 $this->_login($user);
+                $this->_remember_me($user);
                 redirect('/home');
             }
             set_alert('danger', 'Wrong username or password!');
@@ -50,7 +52,7 @@ class Auth extends MY_Controller
         //             message "to many wrong login"
         $this->twig->display('auth/login');
     }
-    
+
     /**
      * Log out from teh app
      */
@@ -58,10 +60,12 @@ class Auth extends MY_Controller
     {
         // session destroy
         session_destroy();
+        // del remember cookie
+        delete_cookie('remember_me');
         // redirect to login page
         redirect('/login');
     }
-    
+
     /**
      * Forgot the password
      */
@@ -78,7 +82,7 @@ class Auth extends MY_Controller
         }
         $this->twig->display('auth/forgot_password');
     }
-    
+
     /**
      * Reset forgot password
      */
@@ -94,7 +98,7 @@ class Auth extends MY_Controller
         }
         $this->twig->display('auth/recovery_password', ['token' => $user->token]);
     }
-    
+
     /**
      * Register new user
      */
@@ -109,15 +113,13 @@ class Auth extends MY_Controller
                 'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
                 'token' => bin2hex(random_bytes(64)),
             ]);
-            if ($user) {
-                // send activation email (link with token)
-                $this->load->library('Sendmail');
-                $this->sendmail->activationEmail($user);
-                // set flash msg. "check your email..."
-                set_alert('success', 'Please check your email inbox.');
-                // redirect to login page
-                redirect('/login');
-            }
+            // send activation email (link with token)
+            $this->load->library('Sendmail');
+            $this->sendmail->activationEmail($user);
+            // set flash msg. "check your email..."
+            set_alert('success', 'Please check your email inbox.');
+            // redirect to login page
+            redirect('/login');
         }
         // display register form
         $this->twig->display('auth/register');
@@ -150,15 +152,57 @@ class Auth extends MY_Controller
     }
 
     // Private methods
+    
+    /**
+     * Set remember me
+     */
+    public function _remember_me(UserModel $user)
+    {
+        if ($this->input->post('remember_me')) {
+            $random_string = bin2hex(random_bytes(64));
+            $cookie = [
+                'name' => 'remember_me',
+                'value' => $random_string,
+                'expire' => 2678400,
+                'httponly' => true,
+            ];
+            set_cookie($cookie);
+            $user->remember_me = $random_string;
+            $user->save();
+            return;
+        }
+        delete_cookie('remember_me');
+        $user->remember_me = null;
+        $user->save();
+    }
+    
+    /**
+     * Check remember me
+     */
+    public function _check_remember_me()
+    {
+        if (!get_cookie('remember_me')) {
+            return;
+        }
+        $user = UserModel::where('remember_me', get_cookie('remember_me'))->first();
+        if ($user) {
+            $this->_login($user);
+            redirect('home');
+        }
+    }
 
     /**
      * Login user
      */
-    public function _login($user)
+    public function _login(UserModel $user)
     {
+        $last_activity = date('Y-m-d H:i:s');
+        $user->last_activity = $last_activity;
+        $user->save();
         $user_data = [
             'user_id' => $user->id,
             'full_name' => $user->full_name,
+            'last_activity' => $last_activity,
             'logged_in' => true,
         ];
         $this->session->set_userdata($user_data);

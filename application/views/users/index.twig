@@ -1,6 +1,7 @@
 {% extends "layouts/application.twig" %}
 
-{% block title %}Home{% endblock %}
+{% set title = lang('Users') %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
     <div class="content-header">
@@ -38,11 +39,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>#</th>
+                        <th>Email</th>
+                        <th>Last activity</th>
+                    </tr>
                     {% for user in users %}
-                        <p>{{ loop.index }}. {{ user.email }}</p>
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.last_activity ? user.last_activity|date('d-m-Y H:i') : 'N/A' }}</td>
+                        </tr>
                     {% endfor %}
-                </div>
+                </table>
                 <div class="card-footer">
                     <a href="#" class="btn btn-default"><i class="fa fa-arrow-left"></i> Back</a>
                 </div>

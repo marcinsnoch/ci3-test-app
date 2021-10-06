@@ -1,13 +1,5 @@
 <?php
 
-/**
- * A base controller for CodeIgniter with view autoloading, layout support,
- * model loading, helper loading, asides/partials and per-controller 404.
- *
- * @link http://github.com/jamierumbelow/codeigniter-base-controller
- *
- * @copyright Copyright (c) 2012, Jamie Rumbelow <http://jamierumbelow.net>
- */
 class MY_Controller extends CI_Controller
 {
 
@@ -30,9 +22,9 @@ class MY_Controller extends CI_Controller
     {
         parent::__construct();
         $this->load->language('application');
-
         $this->_load_twig_globals(['config', 'session']);
         $this->_load_helpers();
+        $this->_activity();
     }
 
     /**
@@ -50,8 +42,6 @@ class MY_Controller extends CI_Controller
      */
     private function _load_twig_globals($defaults = [])
     {
-        // $this->twig->addGlobal('config', $this->config);
-        // $this->twig->addGlobal('session', $this->session);
         $globals = array_merge($defaults, $this->twig_globals);
         foreach ($globals as $key => $val) {
             if (is_int($key)) {
@@ -70,6 +60,18 @@ class MY_Controller extends CI_Controller
     {
         if ((bool) !$this->session->userdata('logged_in')) {
             redirect('login');
+        }
+    }
+    
+    public function _activity()
+    {
+        $last_activity = $this->session->last_activity;
+        if ($this->uri->segment(1) != 'logout' && $last_activity) {
+            $interval = 600; // 10 min.
+            $time_since = (now() - human_to_unix($last_activity));
+            if ($time_since > $interval) {
+                $this->db->set('last_activity', unix_to_human(now(), true, 'eu'))->where('id', $this->session->user_id)->update('users');
+            }        
         }
     }
 }

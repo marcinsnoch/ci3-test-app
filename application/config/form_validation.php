@@ -17,6 +17,7 @@ $config = [
         ['field' => 'email', 'label' => 'Email', 'rules' => 'required|trim|valid_email|callback__email_not_exist'],
         ['field' => 'password', 'label' => 'Password', 'rules' => 'trim|required'],
         ['field' => 'confirm_password', 'label' => 'Confirm password', 'rules' => 'required|trim|matches[password]'],
+        ['field' => 'terms', 'label' => 'Terms', 'rules' => 'required'],
     ],
     'update_user' => [
         ['field' => 'full_name', 'label' => 'Full name', 'rules' => 'required|trim'],

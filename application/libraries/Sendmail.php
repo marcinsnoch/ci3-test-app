@@ -38,7 +38,7 @@ class Sendmail
                 'name' => 'Confirm',
                 'link' => site_url('auth/activation?token='.$user->token),
             ],
-            'body_bottom' => 'Thank you!',
+            'body_bottom' => 'Thank you!<br>Administrator',
         ];
         $body = $this->ci->twig->render('emails/auth', $email_data);
         return $this->sendEmail($user->email, 'Activation email', $body);
@@ -63,7 +63,7 @@ class Sendmail
                 'name' => 'Reset password',
                 'link' => site_url('recovery-password?token='.$user->token),
             ],
-            'body_bottom' => 'Thank you!',
+            'body_bottom' => 'Thank you!<br>Administrator',
         ];
         $body = $this->ci->twig->render('emails/auth', $email_data);
         return $this->sendEmail($user->email, 'Forgot password', $body);

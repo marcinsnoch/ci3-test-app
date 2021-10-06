@@ -12,7 +12,7 @@
             <link href="{{ base_url('plugins/admin-lte/css/adminlte.min.css') }}" rel="stylesheet">
             <link href="{{ base_url('css/styles.min.css') }}" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-            <title>{% block title %}{% endblock %}</title>
+            <title>{% block title %}Page Title{% endblock %} | {{ config.item('app_name') }}</title>
         {% endblock %}
     </head>
 
@@ -35,16 +35,15 @@
                 </ul>
                 <!-- SEARCH FORM -->
                 {{ form_open('', 'class="form-inline ml-3"') }}
-                    <div class="input-group input-group-sm">
-                        <input class="form-control form-control-navbar" type="search" placeholder="{{ lang('Search') }}" aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-navbar" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" type="search" placeholder="{{ lang('Search') }}" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-navbar" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
+                </div>
                 {{ form_close() }}
-
                 <!-- Right navbar links -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Messages Dropdown Menu -->
@@ -158,7 +157,7 @@
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
                 <a href="" class="brand-link">
-                    <img src="img/logo.svg" alt="{{ config.item('app_name') }}" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <img src="img/logo.svg" alt="{{ config.item('app_name') }}" class="brand-image img-circle" style="opacity: .8">
                     <span class="brand-text font-weight-light">{{ config.item('app_name') }}</span>
                 </a>
                 <!-- Sidebar -->
@@ -167,7 +166,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu" data-accordion="false">
                             <li class="nav-item">
-                                <a href="{{ site_url('/') }}" class="nav-link active">
+                                <a href="{{ site_url('/') }}" class="nav-link">
                                     <i class="nav-icon fas fa-home"></i>
                                     <p>{{ lang('Home') }}</p>
                                 </a>
