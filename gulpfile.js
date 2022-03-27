@@ -17,7 +17,7 @@ const outputDir = "./public";
 
 // SCSS to CSS
 function sassToCss() {
-    return src("./src/scss/*.*")
+    return src("./resources/scss/*.*")
         .pipe(plumber())
         .pipe(
             sass({
@@ -45,7 +45,7 @@ function cssMini() {
 
 // Optimize Images
 function images() {
-    return src("./src/img/**/*")
+    return src("./resources/img/**/*")
         .pipe(newer("public/img"))
         .pipe(
             imagemin()
@@ -55,7 +55,7 @@ function images() {
 
 // Concat JS Scripts
 function concatJs() {
-    return src(["./src/js/*.js"])
+    return src(["./resources/js/*.js"])
         .pipe(concat("application.js"))
         .pipe(dest(outputDir + "/js"));
 }
@@ -76,7 +76,7 @@ function compressJsScripts() {
 
 // Generate mjml
 function emailTemplate() {
-    return src("./src/mjml/*.mjml")
+    return src("./resources/mjml/*.mjml")
         .pipe(mjml())
         .pipe(
             rename({
@@ -89,10 +89,10 @@ function emailTemplate() {
 // Watch files and run tasks
 function watchFiles() {
     "use strict";
-    watch("./src/scss/**/*", series(sassToCss, cssMini));
-    watch("./src/js/**/*", series(concatJs, compressJsScripts));
-    watch("./src/img/**/*", images);
-    watch("./src/mjml/*.*", emailTemplate);
+    watch("./resources/scss/**/*", series(sassToCss, cssMini));
+    watch("./resources/js/**/*", series(concatJs, compressJsScripts));
+    watch("./resources/img/**/*", images);
+    watch("./resources/mjml/*.*", emailTemplate);
 }
 
 exports.sassToCss = sassToCss;

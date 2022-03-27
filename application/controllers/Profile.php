@@ -19,7 +19,7 @@ class Profile extends MY_Controller
                 $user->password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
             }
             $user->save();
-            set_alert('success', 'Saved!');
+            set_alert('success', 'Your account details have been saved.');
             redirect('/profile');
         }
         $this->twig->display('profile/index', compact('user'));
