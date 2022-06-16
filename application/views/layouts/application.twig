@@ -5,14 +5,13 @@
         {% block head %}
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
             <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+            <title>{% block title %}Page Title{% endblock %} | {{ config.item('app_name') }}</title>
+            <link rel="shortcut icon" type="image/x-icon" href="{{ base_url('favicon.ico') }}">
             <link href="{{ base_url('plugins/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
             <link href="{{ base_url('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" rel="stylesheet">
             <link href="{{ base_url('plugins/admin-lte/css/adminlte.min.css') }}" rel="stylesheet">
             <link href="{{ base_url('css/styles.min.css') }}" rel="stylesheet">
-            <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-            <title>{% block title %}Page Title{% endblock %} | {{ config.item('app_name') }}</title>
         {% endblock %}
     </head>
 
@@ -136,6 +135,11 @@
                             <i class="fas fa-th-large"></i>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
                     <!-- User menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
@@ -162,70 +166,16 @@
                 </a>
                 <!-- Sidebar -->
                 <div class="sidebar">
-                    <!-- Sidebar Menu -->
-                    <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu" data-accordion="false">
-                            <li class="nav-item">
-                                <a href="{{ site_url('/') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-home"></i>
-                                    <p>{{ lang('Home') }}</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ site_url('/users') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-users"></i>
-                                    <p>{{ lang('Users') }}</p>
-                                </a>
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Start
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Active Page</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Inactive Page</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-header">EXAMPLES</li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-cogs"></i>
-                                    <p>
-                                        Simple Link
-                                        <span class="right badge badge-danger">New</span>
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    {% include 'partials/sidebar_menu.twig' %}
                 </div>
             </aside>
             <div class="content-wrapper">{% block content %}{% endblock %}</div>
-            <aside class="control-sidebar control-sidebar-dark">
-                <div class="p-3">
-                    <h5>Title</h5>
-                    <p>Sidebar content</p>
-                </div>
-            </aside>
+            {% include 'partials/control_sidebar.twig' %}
             <footer class="main-footer">
                 <div class="float-right d-none d-sm-inline">
                     Created by <a href="mailto:">MSX</a>
                 </div>
-                <strong>Copyright &copy; {{ "now"|date('Y') }} <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+                <strong>Copyright &copy; {{ "now"|date('Y') }} <a href="{{ config.item('app_url') }}">{{ config.item('app_name') }}</a>.</strong> All rights reserved.
             </footer>
         </div>
         {% block scripts %}
@@ -242,7 +192,7 @@
                     }, {
                         type: '{{ alert.type }}',
                         z_index: 1050,
-                        placement: {align: 'center'}
+                        placement: {align: 'right'}
                     });
                 </script>
             {% endif %}

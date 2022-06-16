@@ -13,11 +13,12 @@ const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require('gulp-sass')(require('sass'));
 
+const inputDir = "./resources";
 const outputDir = "./public";
 
 // SCSS to CSS
 function sassToCss() {
-    return src("./resources/scss/*.*")
+    return src(inputDir + "/scss/*.*")
         .pipe(plumber())
         .pipe(
             sass({
@@ -45,7 +46,7 @@ function cssMini() {
 
 // Optimize Images
 function images() {
-    return src("./resources/img/**/*")
+    return src(inputDir + "/img/**/*")
         .pipe(newer("public/img"))
         .pipe(
             imagemin()
@@ -55,14 +56,14 @@ function images() {
 
 // Concat JS Scripts
 function concatJs() {
-    return src(["./resources/js/*.js"])
-        .pipe(concat("application.js"))
+    return src([inputDir + "/js/application.js", inputDir + "/js/auth.js"])
+//        .pipe(concat("application.js"))
         .pipe(dest(outputDir + "/js"));
 }
 
 // Compress JS Script
 function compressJsScripts() {
-    return src(outputDir + "/js/application.js")
+    return src([outputDir + "/js/application.js", outputDir + "/js/auth.js"])
         .pipe(
             minify({
                 ext: {
@@ -76,7 +77,7 @@ function compressJsScripts() {
 
 // Generate mjml
 function emailTemplate() {
-    return src("./resources/mjml/*.mjml")
+    return src(inputDir + "/mjml/*.mjml")
         .pipe(mjml())
         .pipe(
             rename({
@@ -89,10 +90,10 @@ function emailTemplate() {
 // Watch files and run tasks
 function watchFiles() {
     "use strict";
-    watch("./resources/scss/**/*", series(sassToCss, cssMini));
-    watch("./resources/js/**/*", series(concatJs, compressJsScripts));
-    watch("./resources/img/**/*", images);
-    watch("./resources/mjml/*.*", emailTemplate);
+    watch(inputDir + "/scss/**/*", series(sassToCss, cssMini));
+    watch(inputDir + "/js/**/*", series(concatJs, compressJsScripts));
+    watch(inputDir + "/img/**/*", images);
+    watch(inputDir + "/mjml/*.*", emailTemplate);
 }
 
 exports.sassToCss = sassToCss;

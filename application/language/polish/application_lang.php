@@ -80,6 +80,7 @@ $lang['Finished_orders'] = 'Zrealizowane zamówienia';
 $lang['First_name'] = 'Imię';
 $lang['Full_name'] = 'Imię i Nazwisko';
 //H
+$lang['Home'] = 'Start';
 $lang['height'] = 'wys.';
 $lang['Height'] = 'Wysokość';
 $lang['Hold'] = 'Wsztrzymana';
