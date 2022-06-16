@@ -1,6 +1,6 @@
 {% extends "layouts/auth.twig" %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Zarejestruj się{% endblock %}
 
 {% block content %}
     <div class="register-box">
@@ -30,7 +30,7 @@
                     {{ form_error('email') }}
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control{{ form_error('password') ? ' is-invalid'}}" value="{{ set_value('password') }}" placeholder="Password">
+                    <input type="password" name="password" class="form-control{{ form_error('password') ? ' is-invalid'}}" value="{{ set_value('password') }}" placeholder="Hasło">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
@@ -39,7 +39,7 @@
                     {{ form_error('password') }}
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" name="confirm_password" class="form-control{{ form_error('confirm_password') ? ' is-invalid'}}" value="{{ set_value('confirm_password') }}" placeholder="Confirm password">
+                    <input type="password" name="confirm_password" class="form-control{{ form_error('confirm_password') ? ' is-invalid'}}" value="{{ set_value('confirm_password') }}" placeholder="Powtórz hasło">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>

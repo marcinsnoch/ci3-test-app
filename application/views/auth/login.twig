@@ -9,7 +9,7 @@
         </div>
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+                <p class="login-box-msg">Zaloguj się, aby rozpocząć sesję</p>
                 {{ form_open() }}
                 <div class="input-group mb-3">
                     <input type="email" name="email" class="form-control{{ form_error('email') ? ' is-invalid'}}" placeholder="Email">
@@ -21,7 +21,7 @@
                     {{ form_error('email') }}
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control{{ form_error('password') ? ' is-invalid'}}" placeholder="Password">
+                    <input type="password" name="password" class="form-control{{ form_error('password') ? ' is-invalid'}}" placeholder="Hasło">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
@@ -33,19 +33,19 @@
                     <div class="col-8">
                         <div class="icheck-primary">
                             <input type="checkbox" name="remember_me" id="remember_me" value="true" {{ set_checkbox('remember_me', 'true') }}>
-                            <label for="remember_me">Remember Me</label>
+                            <label for="remember_me">Zapamiętaj mnie</label>
                         </div>
                     </div>
                     <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block" name="login" value="true">Sign In</button>
+                        <button type="submit" class="btn btn-primary btn-block" name="login" value="true">Zaloguj</button>
                     </div>
                 </div>
                 {{ form_close() }}
                 <p class="mb-1">
-                    <a href="{{ site_url('/forgot-password') }}">I forgot my password</a><br>
+                    <a href="{{ site_url('forgot-password') }}">zapomniałem hasła</a><br>
                 </p>
                 <p class="mb-0">
-                    <a href="{{ site_url('register') }}" class="text-center">Register a new membership</a>
+                    <a href="{{ site_url('register') }}" class="text-center">Zarejestruj się</a>
                 </p>
             </div>
         </div>

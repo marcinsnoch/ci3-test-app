@@ -1,0 +1,88 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Zamówienia' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block styles %}
+<link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url() }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ base_url('orders/create') }}" class="nav-link">
+                        <i class="fas fa-cart-plus"></i> Utwórz zamówienie
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th data-sortable="true" data-formatter="indexNo" data-width="45">#</th>
+                            <th data-sortable="true" data-field="created_at">Data</th>
+                            <th data-sortable="true" data-formatter="productsCountFormatter">Produkt</th>
+                            <th data-sortable="true" data-field="quantity">Ilość</th>
+                            <th data-sortable="true" data-field="user.full_name">Dodane przez</th>
+                            <th data-formatter="actionsFormatter">Akcje</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
+<script src="{{ base_url('plugins/bootstrap-table/locale/bootstrap-table-pl-PL.min.js') }}"></script>
+<script>
+$(function() {
+    $table = $('#data-table');
+    $table.bootstrapTable({
+        classes: 'table table-sm table-striped',
+        pagination: true,
+        searchAlign: 'left',
+        search: true,
+        showColumns: true,
+        showPaginationSwitch: true,
+        showRefresh: true,
+        showToggle: true,
+        url: '{{ base_url('orders/table_data') }}'
+    });
+});
+function indexNo(value, row, index) {
+    return parseInt(index) + 1;
+}
+function productsCountFormatter(index, row) {
+    return row.products.length;
+}
+function actionsFormatter(index, row) {
+    return '<a href="{{ base_url('orders/show/') }}' + row.id + '" class="btn btn-link btn-sm"><i class="fa fa-folder-open"></i> Pokaż</a>';
+}
+</script>
+{% endblock %}

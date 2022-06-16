@@ -1,0 +1,72 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Produkty' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">{{ title }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                        <li class="breadcrumb-item"><a href="{{ base_url('products') }}">{{ title }}</a></li>
+                        <li class="breadcrumb-item active">Dodaj</li>
+                    </ol>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="{{ base_url('products') }}" class="nav-link">
+                            <i class="fas fa-reply"></i> Wróć
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa fa-edit"></i> Nowy produkt</h3>
+                </div>
+                {{ form_open() }}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputNumber">Kod produktu</label>
+                                <input type="text" name="number" id="inputNumber" class="form-control{{ form_error('number') ? ' is-invalid'}}" value="{{ set_value('number') }}" style="text-transform: uppercase">
+                                {{ form_error('number') }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputName">Nazwa produktu</label>
+                                <input type="text" name="name" id="inputName" class="form-control{{ form_error('name') ? ' is-invalid'}}" value="{{ set_value('name') }}">
+                                {{ form_error('name') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputType">Magazyn</label>
+                        {{ form_dropdown('warehouse_id', warehouses, set_value('warehouse_id'), form_error('warehouse_id') ? 'class="form-control is-invalid"' : 'class="form-control"') }}
+                        {{ form_error('warehouse_id') }}
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="{{ base_url('products') }}" class="btn btn-default"><i class="fa fa-reply"></i> Wróć</a>
+                    <button type="submit" name="create_product" class="btn btn-primary float-right" value="true">
+                        <i class="fa fa-save"></i> Zapisz
+                    </button>
+                </div>
+                {{ form_close() }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Produkty' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                    <li class="breadcrumb-item"><a href="{{ base_url('products') }}">{{ title }}</a></li>
+                    <li class="breadcrumb-item active">Edytuj</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url('products/show/'~product.id) }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-edit"></i> Create product</h3>
+            </div>
+            {{ form_open() }}
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="inputNumber">Numer</label>
+                    <input type="text" name="number" id="inputNumber" class="form-control{{ form_error('number') ? ' is-invalid'}}" value="{{ set_value('number', product.number) }}">
+                    {{ form_error('number') }}
+                </div>
+                <div class="form-group">
+                    <label for="inputName">Nazwa</label>
+                    <input type="text" name="name" id="inputName" class="form-control{{ form_error('name') ? ' is-invalid'}}" value="{{ set_value('name', product.name) }}">
+                    {{ form_error('name') }}
+                </div>
+                <div class="form-group">
+                    <label for="inputQuantity">Ilość</label>
+                    <input type="text" name="quantity" id="inputQuantity" class="form-control{{ form_error('quantity') ? ' is-invalid'}}" value="{{ set_value('quantity', product.quantity) }}">
+                    {{ form_error('quantity') }}
+                </div>
+                <div class="form-group">
+                    <label for="inputType">Magazyn</label>
+                    {{ form_dropdown('warehouse_id', warehouses, set_value('warehouse_id', product.warehouse_id), form_error('warehouse_id') ? 'class="form-control is-invalid"' : 'class="form-control"') }}
+                    {{ form_error('warehouse_id') }}
+                </div>
+                <div class="form-group">
+                    <label for="inputLocation">Lokalizacja</label>
+                    {{ form_dropdown('location_id', locations, set_value('location_id', product.location_id), form_error('location_id') ? 'class="form-control is-invalid"' : 'class="form-control"') }}
+                    {{ form_error('location_id') }}
+                </div>
+            </div>
+            <div class="card-footer clearfix">
+                <a href="{{ base_url('products') }}" class="btn btn-default"><i class="fa fa-reply"></i> Wróć</a>
+                <button type="submit" name="update_product" class="btn btn-primary float-right" value="true"><i class="fa fa-save"></i> Zapisz</button>
+            </div>
+            {{ form_close() }}
+        </div>
+    </div>
+</section>
+{% endblock %}

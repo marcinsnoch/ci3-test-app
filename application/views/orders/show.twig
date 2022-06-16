@@ -1,0 +1,152 @@
+{% extends 'layouts/application.twig' %}
+
+{% set title = 'Produkty' %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">
+                    {{ title }}
+                </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a href="{{ base_url() }}">Ekran główny</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ base_url('products') }}">{{ title }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">Dodaj</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url('orders') }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-print"></i> Drukuj
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-download"></i> Generuj PDF
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header clearfix">
+                <h3 class="card-title">
+                    <i class="fas fa-file"></i> Szczegóły zamówienia
+                </h3>
+                <div class="card-tools">
+                    <small class="float-right">Data: {{ order.created_at }}</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row invoice-info">
+                    <div class="col-sm-4 invoice-col">
+                        <b>Zamówienie nr.:</b> {{ order.number }}<br>
+                        <b>Data wystawienia:</b> {{ order.created_at }}<br>
+                        <b>Konto:</b> -<br>
+                        <b>Wystawił/a:</b> {{ order.user.full_name }}<br>
+                    </div>
+                    <div class="col-sm-4 invoice-col">
+                        Adres dostawy:
+                        <address>
+                            <strong>{{ order.address.organization }}</strong><br>
+                            {{ order.address.street }}<br>
+                            {{ order.address.postcode }} {{ order.address.city }}<br>
+                            Kontakt: {{ order.address.name }}<br>
+                            Telefon: {{ order.address.phone }}<br>
+                            Email: {{ order.address.email|default('-') }}
+                        </address>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 table-responsive">
+                        <p class="lead">Lista produktów:</p>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 1rem">lp.</th>
+                                    <th>Nazwa produktu</th>
+                                    <th>Ilość</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in order.products %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <p class="lead">Szczegóły wysyłki</p>
+                        <p>
+                            <b>Data wysyłki:</b> {{ order.created_at }}<br>
+                            <b>Numer wysyłki:</b><br>
+                            <b>Nazwa przewoźnika:</b><br>
+                            <b>Przygotował/a:</b><br>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <p class="lead">Lista przesyłek</p>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 1rem">lp.</th>
+                                        <th>Rodzaj przesyłki</th>
+                                        <th>Wymiary</th>
+                                        <th>Waga</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for shipment in order.shipments %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ lang(shipment.type) }}</td>
+                                        <td>{{ shipment.dimensions }}</td>
+                                        <td>{{ shipment.weight }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer clearfix">
+                <a href="{{ base_url('orders') }}" class="btn btn-default"><i class="fa fa-reply"></i> Wróć</a>
+                <button type="submit" name="create_product" class="btn btn-primary float-right" value="true">
+                    <i class="fa fa-save"></i> Zapisz
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

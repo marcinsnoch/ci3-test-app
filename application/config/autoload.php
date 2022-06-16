@@ -63,8 +63,8 @@ $autoload['libraries'] = [
     'cart',
     'database',
     'form_validation',
-    'twig',
     'session',
+    'twig',
 ];
 
 /*
@@ -98,8 +98,8 @@ $autoload['helper'] = [
     'dump',
     'form',
     'html',
-    'url',
     'language',
+    'url',
 ];
 
 /*

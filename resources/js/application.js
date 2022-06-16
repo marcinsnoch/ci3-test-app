@@ -1,12 +1,27 @@
 const baseUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+const url = window.location;
 
-// set menu active class
+$('ul.nav-sidebar a').filter(function () {
+    return this.href == url;
+}).addClass('active');
+
+$('ul.nav-treeview a').filter(function () {
+    return this.href == url;
+}).parents().eq(2).addClass('menu-open');
+
 $(function () {
-    const url = window.location;
-    const menu = url.pathname.split("/");
-    if (menu.length > 2) {
-        $('.nav a[href="' + url.origin + '/' + menu[1] + '"]').addClass("active");
-    } else {
-        $('.nav a[href="' + url.href + '"]').addClass("active");
-    }
+    const $accountIdDropDown = $('#accountIdDropDown');
+    $accountIdDropDown.on('change', function(e){
+        $.ajax({
+            url: baseUrl + '/accounts/ajax_set',
+            type: 'post',
+            data: {
+                'account_id': $accountIdDropDown.val()
+            },
+            success: function (dataResult) {
+                console.log(dataResult);
+                window.location.reload(true);
+            }
+        });
+    });
 });

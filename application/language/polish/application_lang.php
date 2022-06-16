@@ -150,6 +150,7 @@ $lang['Other'] = 'Inny';
 $lang['OTHER_MENU'] = 'INNE MENU';
 $lang['Owner'] = 'Właściciel';
 //P
+$lang['Parcel'] = 'Paczka';
 $lang['Pallet'] = 'Paleta';
 $lang['Passconf'] = 'Potwierdź hasło';
 $lang['Permission_denied'] = 'Brak dostępu';

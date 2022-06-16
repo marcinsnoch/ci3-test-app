@@ -1,0 +1,106 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Magazyn' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block styles %}
+<link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url() }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-toggle="modal" data-target="#add_warehouse">
+                        <i class="fas fa-plus"></i> Dodaj magazyn
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th data-formatter="indexNo" data-width="45">#</th>
+                            <th data-sortable="true" data-field="name">Nazwa magazynu</th>
+                            <th data-sortable="true" data-field="description">Opis magazynu</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_warehouse">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodaj magazyn</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {{ form_open('', {'id': 'addAccountForm'}) }}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="inputAccountName">Nazwa magazynu</label>
+                        <input type="text" name="name" class="form-control" id="inputAccountName" placeholder="Podaj nazwę magazynu">
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                    <button type="submit" id="save_account" class="btn btn-primary">Zapisz</button>
+                </div>
+                {{ form_close() }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
+<script src="{{ base_url('plugins/bootstrap-table/locale/bootstrap-table-pl-PL.min.js') }}"></script>
+<script src="{{ base_url('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+<script>
+$(function() {
+    $table = $('#data-table');
+    $table.bootstrapTable({
+        classes: 'table table-sm table-striped',
+        pagination: true,
+        search: true,
+        searchAlign: "left",
+        showColumns: true,
+        showPaginationSwitch: true,
+        showRefresh: true,
+        showToggle: true,
+        rowStyle: "rowStyle",
+        url: '{{ base_url('warehouse/table_data') }}'
+    });
+});
+function indexNo(value, row, index) {
+    return parseInt(index) + 1;
+}
+</script>
+{% endblock %}

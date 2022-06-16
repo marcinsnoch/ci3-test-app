@@ -1,1 +1,8 @@
 @import "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700";
+
+#toast-container > div {
+    opacity: .85;
+}
+.toast-top-center {
+    top: 10px;
+}

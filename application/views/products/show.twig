@@ -1,0 +1,252 @@
+{% extends 'layouts/application.twig' %}
+
+{% set title = 'Produkty' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">{{ title }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a href="{{ base_url() }}">Ekran główny</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{{ base_url('products') }}">{{ title }}</a>
+                        </li>
+                        <li class="breadcrumb-item active">Pokaż</li>
+                    </ol>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="{{ base_url('products') }}" class="nav-link">
+                            <i class="fas fa-reply"></i> Wróć
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ base_url('products/edit/'~product.id) }}" class="nav-link">
+                            <i class="fas fa-edit"></i> Edytuj
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ base_url('deliveries') }}" class="nav-link">
+                            <i class="fas fa-truck"></i> Dodaj dostawę
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ base_url('basket/insert/'~product.id) }}" class="nav-link">
+                            <i class="fas fa-cart-arrow-down"></i> Dodaj do koszyka
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Projects Detail
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
+                            <div class="row">
+                                <div class="col-12 col-sm-4">
+                                    <div class="info-box bg-light">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text text-center text-muted">
+                                                Ilość w magazynie
+                                            </span>
+                                            <span class="info-box-number text-center text-muted mb-0">
+                                                {{ product.quantity|default('N/A') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="info-box bg-light">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text text-center text-muted">
+                                                Przydziały
+                                            </span>
+                                            <span class="info-box-number text-center text-muted mb-0">
+                                                {{ product.allocations.sum('allocated') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="info-box bg-light">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text text-center text-muted">
+                                                Nad stan
+                                            </span>
+                                            <span class="info-box-number text-center text-muted mb-0">
+                                                {{ product.quantity - product.allocations.sum('allocated') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 table-responsive">
+                                    <h4>Przydziały</h4>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Konto</th>
+                                                <th>Przydział</th>
+                                                <th>Wydano</th>
+                                                <th>Pozostało</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for allocation in product.allocations %}
+                                                <tr>
+                                                    <td>{{ loop.index }}</td>
+                                                    <td>{{ allocation.account.name }}</td>
+                                                    <td>{{ allocation.allocated }}</td>
+                                                    <td>{{ allocation.release }}</td>
+                                                    <td>{{ allocation.allocated - allocation.release }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2"></td>
+                                                <td><b>{{ product.allocations.sum('allocated') }}</b></td>
+                                                <td><b>{{ product.allocations.sum('release') }}</b></td>
+                                                <td><b>{{ product.allocations.sum('allocated') - product.allocations.sum('release') }}</b></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 table-responsive">
+                                    <h4>Dostawy</h4>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Data dostawy</th>
+                                                <th>Ilość</th>
+                                                <th>Dodane przez</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for delivery in product.deliveries %}
+                                                <tr>
+                                                    <td>{{ loop.index }}</td>
+                                                    <td>{{ delivery.date }}</td>
+                                                    <td>{{ delivery.quantity }}</td>
+                                                    <td>{{ delivery.user.full_name }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2"></td>
+                                                <td><b>{{ product.deliveries.sum('quantity') }}</b></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+                            <h5 class="text-muted">Szczegóły produktu</h5>
+                            <div class="text-muted">
+                                <p class="text-sm">Kod produktu: <b class="d-block">{{ product.number }}</b></p>
+                                <p class="text-sm">Nazwa produktu: <b class="d-block">{{ product.name }}</b></p>
+                                <p class="text-sm">Data dodania: <b class="d-block">{{ product.created_at }}</b></p>
+                                <p class="text-sm">Dodane przez: <b class="d-block">{{ product.user.full_name }}</b></p>
+                            </div>
+
+                            <!-- change location -->
+                            <h5 class="mt-5 text-muted">Lokalizacja</h5>
+                            {{ form_open('', 'id="changeLocation"') }}
+                            <input type="hidden" name="product_id" id="productId" value="{{ product.id }}">
+                            <div class="form-group">
+                                {{ form_dropdown('location_id', locations, set_value('location_id', product.location_id), 'id="locationId" class="form-control"') }}
+                                {{ form_error('location_id') }}
+                            </div>
+                            {{ form_close() }}
+                            <!-- /change location -->
+
+                            <h5 class="mt-5 text-muted">Project files</h5>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href="" class="btn-link text-secondary">
+                                        <i class="far fa-fw fa-file-word"></i> Functional-requirements.docx
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="btn-link text-secondary">
+                                        <i class="far fa-fw fa-file-pdf"></i> UAT.pdf
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="btn-link text-secondary">
+                                        <i class="far fa-fw fa-envelope"></i> Email-from-flatbal.mln
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="btn-link text-secondary">
+                                        <i class="far fa-fw fa-image"></i> Logo.png
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="btn-link text-secondary">
+                                        <i class="far fa-fw fa-file-word"></i> Contract-10_12_2014.docx
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="text-center mt-5 mb-3">
+                                <a href="#" class="btn btn-sm btn-primary">Add files</a>
+                                <a href="#" class="btn btn-sm btn-warning">Report contact</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ base_url('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script>
+        $(function () {
+            $('#changeLocation').on('change', function () {
+                let product_id = $('#productId');
+                let location_id = $('#locationId');
+                $.ajax({
+                    url: '{{ base_url('products/location') }}',
+                    type: 'POST',
+                    data: {
+                        product_id: product_id.val(),
+                        location_id: location_id.val()
+                    },
+                    success: function (dataResult) {
+                        if (dataResult.statusCode === '200') {
+                            toastr.success(dataResult.message);
+                        } else if (dataResult.statusCode === '400') {
+                            toastr.error(dataResult.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

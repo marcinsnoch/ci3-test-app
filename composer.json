@@ -5,11 +5,17 @@
         ]
     },
     "config": {
+        "classmap-authoritative": false,
+        "preferred-install": "source",
         "vendor-dir": "application/vendor"
     },
+    "name": "msx/myapp",
     "require": {
-        "twig/twig": "^2.14.1",
+        "illuminate/database": "^6.20",
+        "php": "^7.2.5|^8.0",
         "twig/intl-extra": "^2.14.1",
-        "illuminate/database": "5.8"
-    }
+        "twig/twig": "^2.14.1"
+    },
+    "time": "",
+    "version": "1.0.0"
 }

@@ -1,0 +1,82 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Dostawy' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block styles %}
+<link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url() }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ base_url('deliveries/create') }}" class="nav-link">
+                        <i class="fa fa-plus"></i> Dodaj dostawę
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        {% if cart.contents is empty  %}
+            <div class="callout callout-info">
+                <p class="lead">Twój koszyk jest pusty!</p>
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-header with-border">
+                    <h4 class="card-title">Zawartość koszyka</h4>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>#</th>
+                            <th>Numer</th>
+                            <th>Ilość</th>
+                            <th>Nazwa</th>
+                            <th>Akcja</th>
+                        </tr>
+                        {% for item in cart.contents %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.qty }}</td>
+                                <td>{{ item.options.item_name }}</td>
+                                <td>
+                                    <a href="{{ site_url('basket/remove/' ~ item.rowid) }}" class="btn btn-danger btn-xs">
+                                        <i class="fa fa-times"></i> Remove
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="{{ site_url('basket/destroy') }}" class="btn btn-danger"><i class="fa fa-trash"></i> Usuń wszystko</a>
+                    <a href="{{ site_url('orders/prepare') }}" class="btn btn-primary float-right"><i class="fa fa-arrow-right"></i> Zamów</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

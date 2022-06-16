@@ -32,41 +32,52 @@ class Sendmail
     public function activationEmail($user)
     {
         $email_data = [
-            'body_title' => 'Hi '. $user->full_name . '!',
-            'body_top' => 'Please click the button below, to confirm your registration.',
+            'body_title' => 'Witaj '. $user->full_name . '!',
+            'body_top' => 'Kliknij poniższy przycisk, aby potwierdzić rejestrację.',
             'btn' => [
-                'name' => 'Confirm',
+                'name' => 'Potwierdzam',
                 'link' => site_url('auth/activation?token='.$user->token),
             ],
-            'body_bottom' => 'Thank you!<br>Administrator',
+            'body_bottom' => 'Administrator',
         ];
         $body = $this->ci->twig->render('emails/auth', $email_data);
-        return $this->sendEmail($user->email, 'Activation email', $body);
+        return $this->sendEmail($user->email, 'Email aktywacyjny', $body);
     }
 
     public function confirmEmail($user)
     {
         $email_data = [
-            'body_title' => 'Hi '. $user->full_name . '!',
-            'body_top' => 'You account is active!',
+            'body_title' => 'Witam '. $user->full_name . '!',
+            'body_top' => 'Twoje konto jest juz aktywne!',
         ];
         $body = $this->ci->twig->render('emails/auth', $email_data);
-        return $this->sendEmail($user->email, 'Activation email', $body);
+        return $this->sendEmail($user->email, 'Email potwierdzający', $body);
     }
-    
+
     public function resetPasswordEmail($user)
     {
         $email_data = [
-            'body_title' => 'Hi '. $user->full_name . '!',
-            'body_top' => 'Please click the button below, to reset Your password.',
+            'body_title' => 'Witaj '. $user->full_name . '!',
+            'body_top' => 'Kliknij poniższy przycisk, aby zresetować hasło.',
             'btn' => [
-                'name' => 'Reset password',
+                'name' => 'Resetuj hasło',
                 'link' => site_url('recovery-password?token='.$user->token),
             ],
-            'body_bottom' => 'Thank you!<br>Administrator',
+            'body_bottom' => 'Administrator',
         ];
         $body = $this->ci->twig->render('emails/auth', $email_data);
-        return $this->sendEmail($user->email, 'Forgot password', $body);
+        return $this->sendEmail($user->email, 'Resetowanie hasła', $body);
+    }
+
+    public function deliveryConfirmationEmail($user, $product)
+    {
+        $email_data = [
+            'body_title' => 'Witaj '. $user->full_name . '!',
+            'body_top' => 'Potwierdzam dostawę produktu: <b>' . $product->number . ' - ' .$product->name .'</b>, do magazymu.<br> Aktualny stan po dostawie: '. $product->quantity,
+            'body_bottom' => 'Administrator',
+        ];
+        $body = $this->ci->twig->render('emails/delivery', $email_data);
+        return $this->sendEmail($user->email, 'Potwierdzenie dostawy', $body);
     }
 }
 

@@ -1,0 +1,146 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Lokalizacje' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block styles %}
+<link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
+<style>
+    .modal-body > .invalid-feedback {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url() }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-toggle="modal" data-target="#add_location">
+                        <i class="fa fa-plus"></i> Dodaj lokalizacje
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th data-sortable="true" data-formatter="indexNo" data-width="45">#</th>
+                            <th data-field="name">Nazwa</th>
+                            <th data-field="description">Opis</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_location">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodaj lokalizacje</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {{ form_open('', {'id': 'addLocationForm'}) }}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="inputLocationName">Nazwa lokalizacji</label>
+                        <input type="text" name="name" class="form-control" id="inputLocationName" placeholder="Podaj nazwę lokalizacji">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputLocationDesc">Opis lokalizacji</label>
+                        <textarea name="description" class="form-control" id="inputLocationDesc" placeholder="Opis lokalizacji"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                    <button type="submit" id="save_location" class="btn btn-primary">Zapisz</button>
+                </div>
+                {{ form_close() }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
+<script src="{{ base_url('plugins/bootstrap-table/locale/bootstrap-table-pl-PL.min.js') }}"></script>
+<script src="{{ base_url('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+<script>
+$(function() {
+    const $table = $('#data-table');
+    $table.bootstrapTable({
+        classes: 'table table-sm table-striped',
+        pagination: true,
+        search: true,
+        searchAlign: "left",
+        showColumns: true,
+        showPaginationSwitch: true,
+        showRefresh: true,
+        showToggle: true,
+        url: '{{ base_url('locations/table_data') }}'
+    });
+    const $addLocationForm = $("#addLocationForm");
+    $addLocationForm.validate({
+        errorClass: "is-invalid",
+        rules: {
+            code: {
+                required: true
+            }
+        },
+        messages: {
+            code: {
+                required: "Proszę podać nazwę lokalizacji"
+            }
+        },
+        submitHandler: function(form) {
+            $.ajax({
+                url: '{{ base_url('locations/ajax_store') }}',
+                type: 'POST',
+                data: $(form).serialize(),
+                success: function (dataResult) {
+                    if (dataResult.statusCode == 200) {
+                        $('#add_location').modal('hide');
+                        $('#inputLocationName').val("");
+                        $('#inputLocationDesc').val("");
+                        toastr.success('Dodano!');
+                        $table.bootstrapTable('refresh');
+                    } else if (dataResult.statusCode == 400) {
+                        $('.invalid-feedback').remove();
+                        $('.modal-body').append(dataResult.message);
+                    }
+                }
+            });
+        }
+    });
+});
+function indexNo(value, row, index) {
+    return parseInt(index) + 1;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Użytkownicy' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Użytkownicy</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                        <li class="breadcrumb-item"><a href="{{ base_url('users') }}">Użytkownicy</a></li>
+                        <li class="breadcrumb-item active">Utwórz</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa fa-edit"></i> Create user</h3>
+                </div>
+                {{ form_open() }}
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="inputType">Typ</label>
+                        {{ form_dropdown('is_admin', ['Użytkownik', 'Administrator'], user.is_admin, 'class="form-control"') }}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" name="email" id="inputEmail" class="form-control{{ form_error('email') ? ' is-invalid'}}" value="{{ set_value('email', user.email) }}">
+                        {{ form_error('email') }}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputFullName">Imię i nazwisko</label>
+                        <input type="text" name="full_name" id="inputFullName" class="form-control{{ form_error('full_name') ? ' is-invalid'}}" value="{{ set_value('full_name', user.full_name) }}">
+                        {{ form_error('full_name') }}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Hasło</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control{{ form_error('password') ? ' is-invalid'}}" placeholder="Hasło">
+                        {{ form_error('password') }}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputConfirmPassword">Powtórz hasło</label>
+                        <input type="password" name="confirm_password" id="inputConfirmPassword" class="form-control{{ form_error('confirm_password') ? ' is-invalid'}}" placeholder="Powtórz hasło">
+                        {{ form_error('confirm_password') }}
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="{{ base_url('users') }}" class="btn btn-default"><i class="fa fa-reply"></i> Wróć</a>
+                    <button type="submit" name="create" class="btn btn-primary float-right" value="true"><i class="fa fa-save"></i> Create</button>
+                </div>
+                {{ form_close() }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

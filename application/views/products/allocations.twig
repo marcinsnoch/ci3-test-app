@@ -1,0 +1,87 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Przydziały' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url('products/show/'~product.id) }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-barcode"></i> Produkt
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="text-muted">
+                    <p>Nazwa produktu: <b>{{ product.name }}</b></p>
+                    <p>Data dodania: <b>{{ product.created_at|date('d-m-Y') }}</b></p>
+                    <p>Ilość w magazynie: <b>{{ product.quantity }}</b></p>
+                </div>
+                <div class="row">
+                    <div class="col-12 table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Konto</th>
+                                    <th>Przydział</th>
+                                    <th>Wydano</th>
+                                    <th>Pozostało</th>
+                                    <th>Data</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for allocation in product.allocations %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ allocation.account.name }}</td>
+                                        <td>{{ allocation.allocated }}</td>
+                                        <td>{{ allocation.release }}</td>
+                                        <td>{{ allocation.allocated - allocation.release }}</td>
+                                        <td>{{ allocation.created_at|date('d-m-Y') }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td class="font-weight-bold">{{ product.allocations.sum('allocated') }}</td>
+                                    <td class="font-weight-bold">{{ product.allocations.sum('release') }}</td>
+                                    <td class="font-weight-bold">{{ product.allocations.sum('allocated') - product.allocations.sum('release') }}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,42 +1,75 @@
 <!-- Sidebar Menu -->
 <nav class="mt-2">
-    <ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu" data-accordion="false">
+    <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item mb-3">
+            {{ accounts_dropdown() }}
+        </li>
         <li class="nav-item">
             <a href="{{ site_url('/') }}" class="nav-link">
                 <i class="nav-icon fas fa-home"></i>
-                <p>{{ lang('Home') }}</p>
+                <p>Ekran główny</p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ site_url('/users') }}" class="nav-link">
-                <i class="nav-icon fas fa-users"></i>
-                <p>{{ lang('Users') }}</p>
+            <a href="{{ site_url('products') }}" class="nav-link">
+                <i class="nav-icon fas fa-cubes"></i>
+                <p>Produkty</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ site_url('orders') }}" class="nav-link">
+                <i class="nav-icon fas fa-shopping-basket"></i>
+                <p>Zamówienia</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ site_url('accounts') }}" class="nav-link">
+                <i class="nav-icon fas fa-boxes"></i>
+                <p>Konta</p>
             </a>
         </li>
         <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-th"></i>
+                <i class="nav-icon fas fa-dolly"></i>
                 <p>
-                    Start
+                    Magazyn
                     <i class="right fas fa-angle-left"></i>
                 </p>
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Active Page</p>
+                    <a href="{{ base_url('deliveries') }}" class="nav-link">
+                        <i class="nav-icon fas fa-truck"></i>
+                        <p>Dostawy</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Inactive Page</p>
+                    <a href="{{ base_url('locations') }}" class="nav-link">
+                        <i class="nav-icon fas fa-map-marker-alt"></i>
+                        <p>Lokalizacje</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ base_url('warehouse') }}" class="nav-link">
+                        <i class="nav-icon fas fa-warehouse"></i>
+                        <p>Magazyn</p>
                     </a>
                 </li>
             </ul>
         </li>
         <li class="nav-header">EXAMPLES</li>
+        <li class="nav-item">
+            <a href="{{ site_url('users') }}" class="nav-link">
+                <i class="nav-icon fas fa-users"></i>
+                <p>Użytkownicy</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ site_url('options') }}" class="nav-link">
+                <i class="nav-icon fas fa-cogs"></i>
+                <p>Ustawienia</p>
+            </a>
+        </li>
         <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-cogs"></i>
@@ -48,4 +81,3 @@
         </li>
     </ul>
 </nav>
-

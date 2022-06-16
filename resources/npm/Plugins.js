@@ -9,14 +9,10 @@ const Plugins = [
         from: "node_modules/bootstrap/dist",
         to: "public/plugins/bootstrap"
     },
-    // Bootstrap notify
+    // Bootstrap-table
     {
-        from: "node_modules/bootstrap-notify/bootstrap-notify.js",
-        to: "public/plugins/bootstrap-notify/bootstrap-notify.js"
-    },
-    {
-        from: "node_modules/bootstrap-notify/bootstrap-notify.min.js",
-        to: "public/plugins/bootstrap-notify/bootstrap-notify.min.js"
+        from: "node_modules/bootstrap-table/dist",
+        to: "public/plugins/bootstrap-table"
     },
     // Font Awesome
     {
@@ -36,6 +32,16 @@ const Plugins = [
     {
         from: "node_modules/jquery/dist",
         to: "public/plugins/jquery"
+    },
+    // jQuery validation
+    {
+        from: "node_modules/jquery-validation/dist",
+        to: "public/plugins/jquery-validation"
+    },
+    // Toastr
+    {
+        from: "node_modules/toastr/build",
+        to: "public/plugins/toastr"
     }
 ];
 

@@ -1,7 +1,5 @@
 <?php
 
-defined('BASEPATH') or exit('No direct script access allowed');
-
 class Auth extends MY_Controller
 {
     public function __construct()
@@ -21,22 +19,22 @@ class Auth extends MY_Controller
             $user = UserModel::where('email', $this->input->post('email'))->first();
             // check if user exist
             if (!$user) {
-                set_alert('danger', 'User does not exist!');
-                redirect('/login');
+                alert_error('Błąd logowania!', null, "{positionClass: 'toast-top-center'}");
+                redirect('login');
             }
             // check if account is activated
             if ($user->token !== null) {
                 // alert: account not active
-                set_alert('danger', 'Your account is not activated. Please check your email.');
-                redirect('/login');
+                alert_error('Twoje konto nie jest aktywowane. Sprawdź pocztę email.', null, "{positionClass: 'toast-top-center'}");
+                redirect('login');
             }
             // compare input password with stored user password
             if (password_verify($this->input->post('password'), $user->password)) {
                 $this->_login($user);
                 $this->_remember_me($user);
-                redirect('/home');
+                redirect();
             }
-            set_alert('danger', 'Wrong username or password!');
+            alert_error('Błędny login lub hasło!', null, "{positionClass: 'toast-top-center'}");
         }
         // correct
         //     set session
@@ -63,7 +61,7 @@ class Auth extends MY_Controller
         // del remember cookie
         delete_cookie('remember_me');
         // redirect to login page
-        redirect('/login');
+        redirect('login');
     }
 
     /**
@@ -77,8 +75,8 @@ class Auth extends MY_Controller
             $user->save();
             $this->load->library('Sendmail');
             $this->sendmail->resetPasswordEmail($user);
-            set_alert('success', 'Please check your email inbox.');
-            redirect('/login');
+            alert_success('Sprawdź skrzynkę pocztową.', null, "{positionClass: 'toast-top-center'}");
+            redirect('login');
         }
         $this->twig->display('auth/forgot_password');
     }
@@ -93,8 +91,8 @@ class Auth extends MY_Controller
             $user->password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
             $user->token = null;
             $user->save();
-            set_alert('success', 'Password changed!');
-            redirect('/login');
+            alert_success('Password changed!', null, "{positionClass: 'toast-top-center'}");
+            redirect('login');
         }
         $this->twig->display('auth/recovery_password', ['token' => $user->token]);
     }
@@ -117,9 +115,9 @@ class Auth extends MY_Controller
             $this->load->library('Sendmail');
             $this->sendmail->activationEmail($user);
             // set flash msg. "check your email..."
-            set_alert('success', 'Please check your email inbox.');
+            alert_success('Please check your email inbox.', null, "{positionClass: 'toast-top-center'}");
             // redirect to login page
-            redirect('/login');
+            redirect('login');
         }
         // display register form
         $this->twig->display('auth/register');
@@ -137,12 +135,12 @@ class Auth extends MY_Controller
         $user = UserModel::where('token', $this->input->get('token'))->first();
         if (!$user) {
             // set flash msg. "error"
-            set_alert('danger', 'Some error occurred!');
+            alert_error('Some error occurred!', null, "{positionClass: 'toast-top-center'}");
         } else {
             // active account
             $user->token = null;
             $user->save();
-            set_alert('success', 'Account activated successfully!');
+            alert_success('Account activated successfully!', null, "{positionClass: 'toast-top-center'}");
             // email to user
             $this->load->library('Sendmail');
             $this->sendmail->confirmEmail($user);
@@ -152,7 +150,7 @@ class Auth extends MY_Controller
     }
 
     // Private methods
-    
+
     /**
      * Set remember me
      */
@@ -169,13 +167,14 @@ class Auth extends MY_Controller
             set_cookie($cookie);
             $user->remember_me = $random_string;
             $user->save();
+
             return;
         }
         delete_cookie('remember_me');
         $user->remember_me = null;
         $user->save();
     }
-    
+
     /**
      * Check remember me
      */
@@ -202,6 +201,7 @@ class Auth extends MY_Controller
         $user_data = [
             'user_id' => $user->id,
             'full_name' => $user->full_name,
+            'is_admin' => $user->is_admin,
             'last_activity' => $last_activity,
             'logged_in' => true,
         ];
@@ -214,7 +214,7 @@ class Auth extends MY_Controller
     public function _logged_in()
     {
         if ((bool) $this->session->userdata('logged_in')) {
-            redirect('/home');
+            redirect('home');
         }
     }
 

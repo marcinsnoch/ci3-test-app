@@ -1,0 +1,88 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Konta' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block styles %}
+    <link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">{{ title }}: {{ account.name }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                        <li class="breadcrumb-item"><a href="{{ base_url('accounts') }}">{{ title }}</a></li>
+                        <li class="breadcrumb-item active">Przydziały</li>
+                    </ol>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="{{ base_url('accounts') }}" class="nav-link">
+                            <i class="fas fa-reply"></i> Wróć
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th data-field="id" data-formatter="indexNo" data-width="45">#</th>
+                                <th data-sortable="true" data-field="product.name">Produkt</th>
+                                <th data-sortable="true" data-field="allocated">Przypisano</th>
+                                <th data-sortable="true" data-field="release">Wydano</th>
+                                <th data-sortable="true" data-field="created_at" data-formatter="dateFormatter">Data</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
+    <script src="{{ base_url('plugins/bootstrap-table/locale/bootstrap-table-pl-PL.min.js') }}"></script>
+    <script src="{{ base_url('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script>
+        $(function () {
+            $table = $('#data-table');
+            $table.bootstrapTable({
+                classes: 'table table-sm table-striped',
+                pagination: true,
+                queryParams: 'queryParams',
+                search: true,
+                searchAlign: 'left',
+                showColumns: true,
+                showPaginationSwitch: true,
+                showRefresh: true,
+                showToggle: true,
+                url: '{{ base_url('accounts/products_table_data') }}'
+            });
+        });
+        function queryParams(params) {
+            params.account_id = {{ account.id }};
+            return params;
+        }
+        function dateFormatter(value, row, index) {
+            const rowDate = row.created_at;
+            return rowDate.substring(0, 10);
+        }
+        function indexNo(value, row, index) {
+            return parseInt(index) + 1;
+        }
+    </script>
+{% endblock %}

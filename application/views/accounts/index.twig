@@ -1,0 +1,170 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Konta' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block styles %}
+    <link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">{{ title }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                        <li class="breadcrumb-item active">{{ title }}</li>
+                    </ol>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="{{ base_url() }}" class="nav-link">
+                            <i class="fas fa-reply"></i> Wróć
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-toggle="modal" data-target="#add_account">
+                            <i class="fas fa-plus"></i> Dodaj konto
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        {% if array_key_exists('archive', input.get()) %}
+                            <a href="{{ base_url('accounts') }}" class="nav-link">
+                                <i class="fas fa-boxes"></i> Lista kont
+                            </a>
+                        {% else %}
+                            <a href="{{ base_url('accounts?archive') }}" class="nav-link text-red">
+                                <i class="fas fa-archive"></i> Wyłączone konta
+                            </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th data-sortable="true" data-formatter="indexNo" data-width="10">#</th>
+                                <th data-field="name" data-sortable="true">Nazwa konta</th>
+                                <th data-field="description" data-sortable="true">Opis</th>
+                                <th data-field="created_at" data-formatter="dateFormatter" data-sortable="true">Data utworzenia</th>
+                                <th data-formatter="actionsFormatter" data-width="200">Akcja</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="add_account">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Dodaj konto</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    {{ form_open('', {'id': 'addAccountForm'}) }}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="inputAccountName">Nazwa konta</label>
+                            <input type="text" name="name" class="form-control" id="inputAccountName" placeholder="Podaj nazwę konta">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" id="save_account" class="btn btn-primary">Zapisz</button>
+                    </div>
+                    {{ form_close() }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
+    <script src="{{ base_url('plugins/bootstrap-table/locale/bootstrap-table-pl-PL.min.js') }}"></script>
+    <script src="{{ base_url('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script>
+        $(function () {
+            $table = $('#data-table');
+            $table.bootstrapTable({
+                classes: 'table table-sm table-striped',
+                pagination: true,
+                queryParams: 'queryParams',
+                search: true,
+                searchAlign: 'left',
+                showColumns: true,
+                showPaginationSwitch: true,
+                showRefresh: true,
+                showToggle: true,
+                url: '{{ base_url('accounts/table_data') }}'
+            });
+            const $addAccountForm = $("#addAccountForm");
+            $addAccountForm.validate({
+                errorClass: "is-invalid",
+                rules: {
+                    name: {
+                        required: true
+                    }
+                },
+                messages: {
+                    name: {
+                        required: 'Proszę podać nazwę konta!'
+                    }
+                },
+                submitHandler: function (form) {
+                    let accountName = $('#inputAccountName');
+                    $.ajax({
+                        url: '{{ base_url('accounts/ajax_store') }}',
+                        type: 'POST',
+                        data: {
+                            'name': accountName.val()
+                        },
+                        success: function (dataResult) {
+                            accountName.val('');
+                            $('#add_account').modal('hide');
+                            if (dataResult.statusCode === '200') {
+                                toastr.success(dataResult.message);
+                                $table.bootstrapTable('refresh');
+                            } else if (dataResult.statusCode === '400') {
+                                toastr.error(dataResult.message);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        function queryParams(params) {
+            const searchParams = new URLSearchParams(window.location.search);
+            if (searchParams.has('archive')) {
+                params.archive = 'true';
+            }
+            return params;
+        }
+        function indexNo(value, row, index) {
+            return parseInt(index) + 1;
+        }
+        function dateFormatter(value, row, index) {
+            const rowDate = row.created_at;
+            return rowDate.substring(0, 10);
+        }
+        function actionsFormatter(index, row) {
+            return [
+                '<a href="{{ base_url('accounts/allocations/') }}' + row.id + '" class="btn btn-secondary btn-sm"><i class="fa fa-chart-pie"></i> Przydziały</a>',
+                '<a href="{{ base_url('accounts/edit/') }}' + row.id + '" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edytuj</a>'
+            ].join(' ');
+        }
+    </script>
+{% endblock %}

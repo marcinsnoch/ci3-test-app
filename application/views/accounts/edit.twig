@@ -1,0 +1,65 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Konta' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">{{ title }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                        <li class="breadcrumb-item"><a href="{{ base_url('accounts') }}">Konta</a></li>
+                        <li class="breadcrumb-item active">Edycja</li>
+                    </ol>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="{{ base_url('accounts') }}" class="nav-link">
+                            <i class="fas fa-reply"></i> Wróć
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        {% if account.deleted_at %}
+                        <a class="nav-link text-success" href="{{ base_url('accounts/restore/'~account.id) }}">
+                            <i class="fa fa-power-off"></i> Włącz konto
+                        </a>
+                        {% else %}
+                        <a class="nav-link text-danger" href="{{ base_url('accounts/destroy/'~account.id) }}">
+                            <i class="fa fa-power-off"></i> Wyłącz konto
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa fa-edit"></i> Edytuj konto</h3>
+                </div>
+                {{ form_open() }}
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="inputName">Nazwa konta</label>
+                        <input type="text" name="name" id="inputName" class="form-control{{ form_error('name') ? ' is-invalid'}}" value="{{ set_value('name', account.name) }}">
+                        {{ form_error('name') }}
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="{{ base_url('accounts') }}" class="btn btn-default"><i class="fa fa-reply"></i> Wróć</a>
+                    <button type="submit" name="update_account" class="btn btn-primary float-right" value="true"><i class="fa fa-save"></i> Zapisz</button>
+                </div>
+                {{ form_close() }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

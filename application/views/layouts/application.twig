@@ -8,9 +8,11 @@
             <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
             <title>{% block title %}Page Title{% endblock %} | {{ config.item('app_name') }}</title>
             <link rel="shortcut icon" type="image/x-icon" href="{{ base_url('favicon.ico') }}">
+            {% block styles %}{% endblock %}
             <link href="{{ base_url('plugins/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
             <link href="{{ base_url('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" rel="stylesheet">
             <link href="{{ base_url('plugins/admin-lte/css/adminlte.min.css') }}" rel="stylesheet">
+            <link href="{{ base_url('plugins/toastr/toastr.css') }}" rel="stylesheet">
             <link href="{{ base_url('css/styles.min.css') }}" rel="stylesheet">
         {% endblock %}
     </head>
@@ -26,16 +28,16 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a href="{{ site_url('/') }}" class="nav-link">Home</a>
+                        <a href="{{ base_url() }}" class="nav-link">Ekran główny</a>
                     </li>
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a href="{{ site_url('/contact') }}" class="nav-link">Contact</a>
+                        <a href="{{ base_url('contact') }}" class="nav-link">Kontakt</a>
                     </li>
                 </ul>
                 <!-- SEARCH FORM -->
                 {{ form_open('', 'class="form-inline ml-3"') }}
                 <div class="input-group input-group-sm">
-                    <input class="form-control form-control-navbar" type="search" placeholder="{{ lang('Search') }}" aria-label="Search">
+                    <input class="form-control form-control-navbar" type="search" placeholder="Szukaj..." aria-label="Search">
                     <div class="input-group-append">
                         <button class="btn btn-navbar" type="submit">
                             <i class="fas fa-search"></i>
@@ -45,6 +47,11 @@
                 {{ form_close() }}
                 <!-- Right navbar links -->
                 <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="{{ base_url('basket') }}" class="nav-link">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                    </li>
                     <!-- Messages Dropdown Menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -55,7 +62,7 @@
                             <a href="#" class="dropdown-item">
                                 <!-- Message Start -->
                                 <div class="media">
-                                    <img src="img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                                    <img src="{{ base_url('img/user.png') }}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                                     <div class="media-body">
                                         <h3 class="dropdown-item-title">
                                             Brad Diesel
@@ -71,7 +78,7 @@
                             <a href="#" class="dropdown-item">
                                 <!-- Message Start -->
                                 <div class="media">
-                                    <img src="img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                    <img src="{{ base_url('img/user.png') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                     <div class="media-body">
                                         <h3 class="dropdown-item-title">
                                             John Pierce
@@ -87,7 +94,7 @@
                             <a href="#" class="dropdown-item">
                                 <!-- Message Start -->
                                 <div class="media">
-                                    <img src="img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                    <img src="{{ base_url('img/user.png') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                     <div class="media-body">
                                         <h3 class="dropdown-item-title">
                                             Nora Silvester
@@ -141,18 +148,18 @@
                         </a>
                     </li>
                     <!-- User menu -->
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown user-menu">
                         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-                            <i class="fas fa-user"></i>
+                            <img src="{{ base_url('img/user.png') }}" class="user-image img-circle elevation-1" alt="User Image">
                             {{ session.full_name }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right p-0">
-                            <a href="{{ base_url('/profile') }}" class="dropdown-item">
-                                <i class="fas fa-user-cog mr-2"></i> Profile
+                            <a href="{{ base_url('profile') }}" class="dropdown-item">
+                                <i class="fas fa-user-cog mr-2"></i> Mój profil
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="{{ base_url('/logout') }}" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            <a href="{{ base_url('logout') }}" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Wyloguj
                             </a>
                         </div>
                     </li>
@@ -161,7 +168,7 @@
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
                 <a href="" class="brand-link">
-                    <img src="img/logo.svg" alt="{{ config.item('app_name') }}" class="brand-image img-circle" style="opacity: .8">
+                    <img src="{{ base_url('img/logo.svg') }}" alt="{{ config.item('app_name') }}" class="brand-image img-circle" style="opacity: .8">
                     <span class="brand-text font-weight-light">{{ config.item('app_name') }}</span>
                 </a>
                 <!-- Sidebar -->
@@ -173,30 +180,21 @@
             {% include 'partials/control_sidebar.twig' %}
             <footer class="main-footer">
                 <div class="float-right d-none d-sm-inline">
-                    Created by <a href="mailto:">MSX</a>
+                    Created by <a href="mailto:marcin.msx@gmail.com">MSX TECH</a>
                 </div>
                 <strong>Copyright &copy; {{ "now"|date('Y') }} <a href="{{ config.item('app_url') }}">{{ config.item('app_name') }}</a>.</strong> All rights reserved.
             </footer>
         </div>
-        {% block scripts %}
-            <script src="{{ base_url('plugins/jquery/jquery.min.js') }}"></script>
-            <script src="{{ base_url('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-            <script src="{{ base_url('plugins/admin-lte/js/adminlte.min.js') }}"></script>
-            <script src="{{ base_url('plugins/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
-            <script src="{{ base_url('js/application.min.js') }}"></script>
-            {% set alert = session.flashdata('alert') %}
-            {% if alert %}
-                <script>
-                    $.notify({
-                        message: '{{ alert.msg }}'
-                    }, {
-                        type: '{{ alert.type }}',
-                        z_index: 1050,
-                        placement: {align: 'right'}
-                    });
-                </script>
-            {% endif %}
-        {% endblock %}
+        <script src="{{ base_url('plugins/jquery/jquery.min.js') }}"></script>
+        <script src="{{ base_url('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ base_url('plugins/admin-lte/js/adminlte.min.js') }}"></script>
+        <script src="{{ base_url('plugins/toastr/toastr.min.js') }}"></script>
+        {% block scripts %}{% endblock %}
+        <script src="{{ base_url('js/application.min.js') }}"></script>
+        {% set alert = session.flashdata('alert') %}
+        {% if alert %}
+            <script>toastr.{{ alert.type }}('{{ alert.msg|raw }}', '{{ alert.title|raw }}');</script>
+        {% endif %}
     </body>
 
 </html>

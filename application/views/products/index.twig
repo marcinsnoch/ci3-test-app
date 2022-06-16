@@ -1,0 +1,119 @@
+{% extends "layouts/application.twig" %}
+
+{% set title = 'Produkty' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block styles %}
+<link href="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ base_url() }}">Ekran główny</a></li>
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand navbar-white navbar-light border mb-2 p-1">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="{{ base_url() }}" class="nav-link">
+                        <i class="fas fa-reply"></i> Wróć
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ base_url('products/create') }}" class="nav-link">
+                        <i class="fas fa-plus"></i> Dodaj produkt
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <div class="toolbar form-inline">
+                    {{ form_dropdown('warehouse', warehouses, '', 'id="selectWarehouse" class="form-control mr-1"') }}
+                    {{ form_dropdown('year', years, 'now'|date('Y'), 'id="selectYear" class="form-control"') }}
+                </div>
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th data-formatter="indexNo" data-width="45">#</th>
+                            <th data-sortable="true" data-field="created_at" data-formatter="dateFormatter" data-sortable="true">Data dodania</th>
+                            <th data-sortable="true" data-field="number">Numer</th>
+                            <th data-sortable="true" data-field="name">Nazwa</th>
+                            <th data-sortable="true" data-field="quantity">Ilość w mag.</th>
+                            <th data-sortable="true" data-field="location.name">Lokalizacja</th>
+                            <th data-sortable="true" data-field="warehouse.name">Magazyn</th>
+                            <th data-formatter="actionsFormatter">Akcje</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ base_url('plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
+<script src="{{ base_url('plugins/bootstrap-table/locale/bootstrap-table-pl-PL.min.js') }}"></script>
+<script>
+$(function() {
+    $table = $('#data-table');
+    $table.bootstrapTable({
+        classes: 'table table-sm table-striped',
+        pagination: true,
+        pageSize: 25,
+        queryParams: 'queryParams',
+        sortName: "created_at",
+        sortOrder: "desc",
+        search: true,
+        showColumns: true,
+        showPaginationSwitch: true,
+        showRefresh: true,
+        showToggle: true,
+        rowStyle: 'rowStyle',
+        toolbar: '.toolbar',
+        url: '{{ base_url('products/table_data') }}'
+    });
+    $('select').on('change', function () {
+        $table.bootstrapTable('refresh');
+    });
+});
+function queryParams (params) {
+    const warehouse = $('#selectWarehouse').val();
+    const year = $('#selectYear').val();
+    if (warehouse > 0) {
+        params.warehouse = warehouse;
+    }
+    params.year = year;
+    return params;
+}
+function indexNo(value, row, index) {
+    return parseInt(index) + 1;
+}
+function dateFormatter(value, row, index) {
+    const rowDate = row.created_at;
+    return rowDate.substring(0, 10);
+}
+function actionsFormatter (value, row) {
+    return '<a href="{{ base_url('products/show') }}/'+ row.id +'"><i class="fa fa-folder-open"></i> Otwórz</a>';
+}
+function rowStyle(value, row, index) {
+    if (value.quantity <= 0) {
+        return { classes: "text-muted" };
+    } else {
+        return {};
+    }
+}
+</script>
+{% endblock %}
